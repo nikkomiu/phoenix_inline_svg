@@ -99,7 +99,7 @@ defmodule PhoenixInlineSvg.Helpers do
     case Application.fetch_env(:phoenix_inline_svg, config) do
       :error ->
         default
-      data ->
+      {:ok, data} ->
         data
     end
   end
