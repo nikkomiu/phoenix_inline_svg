@@ -9,7 +9,7 @@ Add `phoenix_inline_svg` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:phoenix_inline_svg, "~> 0.1.0"}]
+  [{:phoenix_inline_svg, "~> 0.2.0"}]
 end
 ```
 
@@ -35,27 +35,21 @@ this package to your needs:
     When using this option make sure you use a directory that is
     outputted to a location that is accessible after a release is
     created for the project. (default: `/priv/static/svg/`)
-- `default_collection`: The collection to use when no collection is
-    specified. (default: `generic`)
 - `not_found`: What should be dispayed in the `<i>` when there is
     no SVG file found. (default: `<svg viewbox='0 0 60 60'><text x='0' y='40' font-size='30' font-weight='bold' font-family='monospace'>Err</text></svg>`)
 
 ## Usage
 
-### Default Collection
+### Generic Collection
 
 If you have set up the import in the `web.ex` file a view can use
 this module by adding:
-
-By default `svg_image` uses the collection of generic. However, this can
-changed through the config option `default_collection`.
 
 ```
 <%= svg_image(@conn, "home") %>
 ```
 
 Where `home` is the name of the SVG file you want to load.
-
 This will output the HTML:
 
 ```
