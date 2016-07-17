@@ -5,24 +5,33 @@ defmodule PhoenixInlineSvg.Mixfile do
     [app: :phoenix_inline_svg,
      version: "0.1.0",
      elixir: "~> 1.3",
-     deps: deps,
-     package: [
-       contributors: ["Nikko Miu"],
-       maintainers: ["Nikko Miu"],
-       licenses: ["MIT"],
-       links: %{github: "https://github.com/nikkomiu/phoenix_inline_svg"}
-     ],
-     description: """
-     SVG Icon Loader for Phoenix
-     """
+     deps: deps(),
+     package: package(),
+     description: description()
     ]
   end
 
   def application do
-    [applications: [:logger]]
+    []
   end
 
   defp deps do
     [{:phoenix, "~> 1.2"}]
+  end
+
+  defp description do
+    """
+    An inline SVG file renderer for Phoenix Framework. This package
+    is designed to make loading SVG based icons into HTML structure
+    much easeier in Phoenix Frameowrk.
+    """
+  end
+
+  defp package do
+    [
+      maintainers: ["Nikko Miu <nikkoamiu@gmail.com>"],
+      licenses: ["MIT"],
+      links: %{github: "https://github.com/nikkomiu/phoenix_inline_svg"}
+    ]
   end
 end
