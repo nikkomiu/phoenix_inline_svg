@@ -1,0 +1,2 @@
+defmodule PhoenixInlineSvg do
+end
