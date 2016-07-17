@@ -9,7 +9,7 @@ Add `phoenix_inline_svg` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:phoenix_inline_svg, "~> 0.2.1"}]
+  [{:phoenix_inline_svg, "~> 0.2"}]
 end
 ```
 
