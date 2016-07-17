@@ -58,7 +58,11 @@ defmodule PhoenixInlineSvg.Helpers do
     ```
 
   """
-  def svg_image(conn, name, collection \\ "generic") do
+  def svg_image(conn, name, collection \\ nil) do
+    if collection == nil do
+      collection = config_or_default(:default_collection, "generic")
+    end
+
     "#{collection}/#{name}.svg"
     |> read_svg_file(conn)
     |> wrap_svg(collection, name)
