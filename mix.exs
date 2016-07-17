@@ -7,7 +7,8 @@ defmodule PhoenixInlineSvg.Mixfile do
      elixir: "~> 1.3",
      deps: deps(),
      package: package(),
-     description: description()
+     description: description(),
+     docs: [extras: ["README.md"]]
     ]
   end
 
@@ -16,7 +17,8 @@ defmodule PhoenixInlineSvg.Mixfile do
   end
 
   defp deps do
-    [{:phoenix, "~> 1.2"}]
+    [{:phoenix, "~> 1.2"},
+     {:ex_doc, ">= 0.0.0", only: :dev}]
   end
 
   defp description do

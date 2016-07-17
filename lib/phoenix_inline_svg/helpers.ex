@@ -17,22 +17,48 @@ defmodule PhoenixInlineSvg.Helpers do
   Sends the contents of the SVG file `name` in the directory.
 
   Returns a safe HTML string with the contents of the SVG file
-  wrapped in an i HTML element with classes.
+  wrapped in an `i` HTML element with classes.
 
   ## Examples
 
-    <%= svg_icon(@conn, "home") %>
+    Using only the default collection (**generic**):
+    ```
+    <%= svg_image(@conn, "home") %>
+    ```
+
+    Will result in output of:
+    ```
     <i class="generic-svgs generic-home-svg">
       <svg>...</svg>
     </i>
+    ```
 
-    <%= svg_icon(@conn, "user", "fontawesome") %>
+    Expects the SVG to be loaded from:
+    ```
+    priv/static/svg/
+    ```
+
+    Which is configurable through the config option:
+    ```
+    config :phoenix_inline_svg, dir: "some/other/dir"
+    ```
+
+    ---
+
+    Using a collection:
+    ```
+    <%= svg_image(@conn, "user", "fontawesome") %>
+    ```
+
+    Will result in the output:
+    ```
     <i class="fontawesome-svgs fontawesome-home-svg">
       <svg>...</svg>
     </i>
+    ```
 
   """
-  def svg_icon(conn, name, collection \\ "generic") do
+  def svg_image(conn, name, collection \\ "generic") do
     "#{collection}/#{name}.svg"
     |> read_svg_file(conn)
     |> wrap_svg(collection, name)
