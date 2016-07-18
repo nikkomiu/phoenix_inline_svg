@@ -1,7 +1,7 @@
 # Phoenix Inline SVG
 
 Adds support for inline SVG files in Phoenix Framework. This package
-allows you to quickly and easily add SVG files into your HTML templates.
+allows you to quickly and easily add SVG files into your HTML templates in Phoenix Framework.
 
 ## Installation
 
