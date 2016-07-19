@@ -78,16 +78,41 @@ This will load the SVG file from:
 There are several _optional_ configuration settings for adjusting
 this package to your needs:
 
-- `dir`: The directory in the project to load image assets from.
-    When using this option make sure you use a directory that is
-    outputted to a location that is accessible after a release is
-    created for the project. (default: `/priv/static/svg/`)
-- `default_collection`: The name of the collection to use by default.
-    This is usually overridden to be the primary collection of images.
-    (default: `generic`)
-- `not_found`: What should be dispayed in the `<i>` when there is
-    no SVG file found. Default:
-    ```
+### Directory
+
+The directory in the project to load image assets from. If you are using Exrm
+make sure you use a directory that is outputted to the projects `lib` directory
+after the release has been created.
+
+```elixir
+config :phoenix_inline_svg, dir: "/priv/somewhere/"
+```
+
+The default value is `/priv/static/svg/` and is a directory relative to the
+project's root directory.
+
+### Default Collection
+
+The name of the collection to use by default. This is usually overridden to be
+the primary collection of images.
+
+```elixir
+config :phoenix_inline_svg, default_collection: "fontawesome"
+```
+
+The default value is `generic`
+
+### Not Found
+
+What should be dispayed in the `<i>` element when there is no SVG file found.
+
+```elixir
+config :phoenix_inline_svg, not_found: "<p>Oh No!</p>"
+```
+
+The default value is:
+
+```
 <svg viewbox='0 0 60 60'>
   <text x='0' y='40' font-size='30' font-weight='bold'
     font-family='monospace'>Err</text>
