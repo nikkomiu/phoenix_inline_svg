@@ -6,11 +6,30 @@ defmodule PhoenixInlineSvg.Helpers do
   In order to get best use out of this this module
   should be imported in the quoted `view` def of the `web/web.ex`.
 
+    ```
     def view do
       quote do
         import PhoenixInlineSvg.Helpers
       end
     end
+    ```
+
+  By default SVG files are loaded from:
+  ```
+  priv/static/svg/
+  ```
+
+  The directory where SVG files are loaded from can be configured
+  by setting the configuration variable:
+  ```
+  config :phoenix_inline_svg, dir: "some/other/dir"
+  ```
+
+  Where `some/other/dir` is a directory located in the Phoenix
+  application directory.
+
+  *Note:* When using Exrm you will need to ensure that the directory
+  you set is in the outputted `lib` directory of your application.
   """
 
   @doc """
@@ -20,8 +39,6 @@ defmodule PhoenixInlineSvg.Helpers do
   wrapped in an `i` HTML element with classes.
 
   ## Examples
-
-    Using only the default collection (**generic**):
     ```
     <%= svg_image(@conn, "home") %>
     ```
@@ -33,19 +50,19 @@ defmodule PhoenixInlineSvg.Helpers do
     </i>
     ```
 
-    Expects the SVG to be loaded from:
-    ```
-    priv/static/svg/
-    ```
+  """
+  def svg_image(conn, name) do
+    svg_image(conn, name, config_or_default(:default_collection, "generic"))
+  end
 
-    Which is configurable through the config option:
-    ```
-    config :phoenix_inline_svg, dir: "some/other/dir"
-    ```
+  @doc """
+  Sends the contents of the SVG file `name` in the directory.
 
-    ---
+  Returns a safe HTML string with the contents of the SVG file
+  wrapped in an `i` HTML element with classes.
 
-    Using a collection:
+  ## Examples
+
     ```
     <%= svg_image(@conn, "user", "fontawesome") %>
     ```
@@ -58,16 +75,10 @@ defmodule PhoenixInlineSvg.Helpers do
     ```
 
   """
-  def svg_image(conn, name, collection \\ nil) do
-    coll =
-      case collection do
-        nil -> config_or_default(:default_collection, "generic")
-        c -> c
-      end
-
-    "#{coll}/#{name}.svg"
+  def svg_image(conn, name, collection) do
+    "#{collection}/#{name}.svg"
     |> read_svg_file(conn)
-    |> wrap_svg(coll, name)
+    |> wrap_svg(collection, name)
     |> safety_string()
   end
 
