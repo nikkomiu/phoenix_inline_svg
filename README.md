@@ -88,8 +88,8 @@ this package to your needs:
 - `not_found`: What should be dispayed in the `<i>` when there is
     no SVG file found. Default:
     ```
-    <svg viewbox='0 0 60 60'>
-      <text x='0' y='40' font-size='30' font-weight='bold'
-        font-family='monospace'>Err</text>
-    </svg>
-    ```
+<svg viewbox='0 0 60 60'>
+  <text x='0' y='40' font-size='30' font-weight='bold'
+    font-family='monospace'>Err</text>
+</svg>
+```
