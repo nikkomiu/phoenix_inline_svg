@@ -3,7 +3,7 @@ defmodule PhoenixInlineSvg.Mixfile do
 
   def project do
     [app: :phoenix_inline_svg,
-     version: "0.2.1",
+     version: "0.2.2",
      elixir: "~> 1.3",
      deps: deps(),
      package: package(),
