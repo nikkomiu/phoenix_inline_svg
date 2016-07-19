@@ -59,13 +59,15 @@ defmodule PhoenixInlineSvg.Helpers do
 
   """
   def svg_image(conn, name, collection \\ nil) do
-    if collection == nil do
-      collection = config_or_default(:default_collection, "generic")
-    end
+    coll =
+      case collection do
+        nil -> config_or_default(:default_collection, "generic")
+        c -> c
+      end
 
-    "#{collection}/#{name}.svg"
+    "#{coll}/#{name}.svg"
     |> read_svg_file(conn)
-    |> wrap_svg(collection, name)
+    |> wrap_svg(coll, name)
     |> safety_string()
   end
 
@@ -97,7 +99,7 @@ defmodule PhoenixInlineSvg.Helpers do
     case Application.fetch_env(:phoenix_inline_svg, config) do
       :error ->
         default
-      data ->
+      {:ok, data} ->
         data
     end
   end
