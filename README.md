@@ -138,13 +138,13 @@ defmodule __MY_APP_NAME__.InlineSvgCache do
 
   alias PhoenixInlineSvg.Helpers
 
-  def start_link() do
-    GenServer.start_link(__MODULE__, [], name: __MODULE__)
-  end
-  
   #
   # Client API
   #
+
+  def start_link() do
+    GenServer.start_link(__MODULE__, [], name: __MODULE__)
+  end
   
   def svg_image(conn, svg, collection \\ nil) do
     svg_name = "#{collection}/#{svg}"
@@ -172,7 +172,7 @@ defmodule __MY_APP_NAME__.InlineSvgCache do
   end
   
   #
-  # Server Callbacks
+  # Server API
   #
   
   def init(_) do
