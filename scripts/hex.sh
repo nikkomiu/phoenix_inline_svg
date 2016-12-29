@@ -12,3 +12,7 @@ echo '{plugins, [rebar3_hex]}.' > ~/.config/rebar3/rebar.config
 mix hex publish <<EOF
 y
 EOF
+
+mix hex publish.docs <<EOF
+y
+EOF

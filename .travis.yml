@@ -17,5 +17,6 @@ script:
 deploy:
   provider: script
   script: scripts/hex.sh
+  skip_cleanup: true
   on:
     tags: true
