@@ -1,6 +1,7 @@
 # Phoenix Inline SVG
 
 [![Build Status](https://travis-ci.org/nikkomiu/phoenix_inline_svg.svg?branch=master)](https://travis-ci.org/nikkomiu/phoenix_inline_svg)
+[![Coverage Status](https://coveralls.io/repos/github/nikkomiu/phoenix_inline_svg/badge.svg?branch=master)](https://coveralls.io/github/nikkomiu/phoenix_inline_svg?branch=master)
 [![Inline docs](http://inch-ci.org/github/nikkomiu/phoenix_inline_svg.svg)](http://inch-ci.org/github/nikkomiu/phoenix_inline_svg)
 [![Hex.pm](https://img.shields.io/hexpm/dt/phoenix_inline_svg.svg)](https://hex.pm/packages/phoenix_inline_svg)
 [![Hex.pm](https://img.shields.io/hexpm/v/phoenix_inline_svg.svg)](https://hex.pm/packages/phoenix_inline_svg)
