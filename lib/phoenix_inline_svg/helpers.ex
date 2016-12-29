@@ -3,8 +3,34 @@ defmodule PhoenixInlineSvg.Helpers do
   The module that adds the view helpers to fetch
   and render SVG files into safe HTML.
 
-  In order to get best use out of this this module
-  should be imported in the quoted `view` def of the `web/web.ex`.
+  ## New Way
+
+  The preferred way of using this library is to add the helpers to the quoted
+  `view` in your `web.ex` file.
+
+  ```elixir
+  def view do
+    quote do
+      use PhoenixInlineSvg.Helpers, otp_app: :phoenix_inline_svg
+    end
+  end
+  ```
+
+  Using the new way you can get svg images using the methods:
+
+    ```elixir
+    # Get an image with the default collection
+    svg_image("image_name")
+
+    # Get an image with a different collection
+    svg_image("image_name", "collection_name")
+    ```
+
+  ## Old Way
+
+  As an alternative this module can be imported in the quoted `view` def of the
+  `web/web.ex` which will always pull the SVG files from the disk (unless you
+  are using a caching class).
 
     ```
     def view do
@@ -13,6 +39,12 @@ defmodule PhoenixInlineSvg.Helpers do
       end
     end
     ```
+
+  *Note:* If you are setting a custom directory for the SVG files and are using
+  Exrm or Distillery, you will need to ensure that the directory you set is in
+  the outputted `lib` directory of your application.
+
+  ## In Both Configurations
 
   By default SVG files are loaded from:
   ```
@@ -27,14 +59,17 @@ defmodule PhoenixInlineSvg.Helpers do
 
   Where `some/other/dir` is a directory located in the Phoenix
   application directory.
-
-  *Note:* When using Exrm you will need to ensure that the directory
-  you set is in the outputted `lib` directory of your application.
   """
 
   @doc """
   The using method for the Inline SVG library precompiles the SVG images into
-  static definitions.
+  static function definitions.
+
+  **Note** These will not be able to be changed as the contents of the SVG files
+  will be directly loaded into the build of the application.
+
+  If you want to support changing SVGs on the fly without a new deployment, use
+  the `import` method instead.
 
   Using this method requires you to tell the use statement what the name of your
   OTP app is.
