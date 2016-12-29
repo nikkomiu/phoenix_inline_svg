@@ -1,5 +1,8 @@
 # Phoenix Inline SVG
 
+[![Build Status](https://travis-ci.org/nikkomiu/phoenix_inline_svg.svg?branch=master)](https://travis-ci.org/nikkomiu/phoenix_inline_svg)
+[![Inline docs](http://inch-ci.org/github/nikkomiu/phoenix_inline_svg.svg)](http://inch-ci.org/github/nikkomiu/phoenix_inline_svg)
+
 Adds support for inline SVG files in Phoenix Framework. This package
 allows you to quickly and easily add SVG files into your HTML templates in Phoenix Framework.
 
@@ -145,7 +148,7 @@ defmodule __MY_APP_NAME__.InlineSvgCache do
   def start_link() do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
-  
+
   def svg_image(conn, svg, collection \\ nil) do
     svg_name = "#{collection}/#{svg}"
     case lookup(svg_name) do
@@ -162,24 +165,24 @@ defmodule __MY_APP_NAME__.InlineSvgCache do
         data
     end
   end
-  
+
   def lookup(name) do
     GenServer.call(__MODULE__, {:lookup, name})
   end
-  
+
   def insert(name, data) do
     GenServer.cast(__MODULE__, {:insert, name, data})
   end
-  
+
   #
   # Server API
   #
-  
+
   def init(_) do
     :ets.new(:svg_image, [:named_table, read_concurrency: true])
     {:ok, %{}}
   end
-  
+
   def handle_call({:lookup, name}, _from, state) do
     data =
       case :ets.lookup(:svg_image, name) do
@@ -188,7 +191,7 @@ defmodule __MY_APP_NAME__.InlineSvgCache do
       end
     {:reply, data, state}
   end
-  
+
   def handle_cast({:insert, name, data}, state) do
     :ets.insert(:svg_image, {name, data})
     {:noreply, state}

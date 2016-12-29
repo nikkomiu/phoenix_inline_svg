@@ -13,3 +13,4 @@ script:
   - mix test
   - mix credo
   - mix coveralls
+  - mix inch.report
