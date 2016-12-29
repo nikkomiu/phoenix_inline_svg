@@ -27,7 +27,7 @@ package as an import to your `web.ex` under the view quote:
 def view do
   quote do
     ...
-    import PhoenixInlineSvg.Helpers
+    use PhoenixInlineSvg.Helpers, otp_app: :my_app_name
     ...
   end
 end
@@ -41,7 +41,7 @@ If you have set up the import in the `web.ex` file a view can use
 this module by adding:
 
 ```
-<%= svg_image(@conn, "home") %>
+<%= svg_image("home") %>
 ```
 
 Where `home` is the name of the SVG file you want to load.
@@ -65,7 +65,7 @@ There is an optional argument in the function to allow for breaking up
 SVG files into collections (or folders on the filesystem):
 
 ```
-<%= svg_image(@conn, "user", "fontawesome") %>
+<%= svg_image("user", "fontawesome") %>
 ```
 
 ```
@@ -127,6 +127,9 @@ The default value is:
 ```
 
 ## Caching SVGs
+
+**For Use with Import Only**: Do not use the caching class if you are using the
+`use PhoenixInlineSvg.Helpers, otp_app: :my_app_name` method due to static methods.
 
 To improve the response time of the applicaiton it is recommended to cache the SVG files
 that are loaded from the disk to improve the performance by not fetching from the disk on
