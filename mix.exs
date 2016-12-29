@@ -8,6 +8,7 @@ defmodule PhoenixInlineSvg.Mixfile do
      deps: deps(),
      package: package(),
      description: description(),
+     test_coverage: [tool: ExCoveralls],
      docs: [extras: ["README.md"]]
     ]
   end
@@ -18,7 +19,10 @@ defmodule PhoenixInlineSvg.Mixfile do
 
   defp deps do
     [{:phoenix, "~> 1.2"},
-     {:ex_doc, ">= 0.0.0", only: :dev}]
+     {:inch_ex, "~> 0.5", only: [:dev, :test]},
+     {:credo, "~> 0.5", only: [:dev, :test]},
+     {:excoveralls, "~> 0.5", only: [:dev, :test]},
+     {:ex_doc, ">= 0.0.0", only: [:dev, :test]}]
   end
 
   defp description do
