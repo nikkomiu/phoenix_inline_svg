@@ -43,8 +43,18 @@ defmodule PhoenixInlineSvg.Helpers do
 
     In the quoted `view` def of the `web/web/ex` you should add:
 
+    ```elixir
+    use PhoenixInlineSvg.Helpers, otp_app: :my_app_name
     ```
-    use PhoenixInlineSvg.Helpers
+
+    This will create pre-built functions:
+
+    ```elixir
+    # Default collection
+    svg_image("image_name")
+
+    # Named collection
+    svg_image("image_name", "collection_name")
     ```
   """
   defmacro __using__([otp_app: app_name]) do
