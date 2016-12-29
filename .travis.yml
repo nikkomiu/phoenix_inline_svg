@@ -11,8 +11,8 @@ before_script:
 script:
   - mix test
   - mix credo
-  - mix coveralls
   - mix inch.report
+  - mix coveralls.travis
 
 deploy:
   provider: script

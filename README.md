@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/nikkomiu/phoenix_inline_svg.svg?branch=master)](https://travis-ci.org/nikkomiu/phoenix_inline_svg)
 [![Inline docs](http://inch-ci.org/github/nikkomiu/phoenix_inline_svg.svg)](http://inch-ci.org/github/nikkomiu/phoenix_inline_svg)
+[![Hex.pm](https://img.shields.io/hexpm/dt/phoenix_inline_svg.svg)](https://hex.pm/packages/phoenix_inline_svg)
+[![Hex.pm](https://img.shields.io/hexpm/v/phoenix_inline_svg.svg)](https://hex.pm/packages/phoenix_inline_svg)
+[![Hex.pm](https://img.shields.io/hexpm/l/phoenix_inline_svg.svg)](https://hex.pm/packages/phoenix_inline_svg)
 
 Adds support for inline SVG files in Phoenix Framework. This package
 allows you to quickly and easily add SVG files into your HTML templates in Phoenix Framework.

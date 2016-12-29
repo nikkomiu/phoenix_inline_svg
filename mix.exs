@@ -8,13 +8,19 @@ defmodule PhoenixInlineSvg.Mixfile do
      deps: deps(),
      package: package(),
      description: description(),
+     preferred_cli_env: cli_env(),
      test_coverage: [tool: ExCoveralls],
      docs: [extras: ["README.md"]]
     ]
   end
 
-  def application do
-    []
+  def cli_env() do
+    [
+      "coveralls": :test,
+      "coveralls.detail": :test,
+      "coveralls.post": :test,
+      "coveralls.html": :test
+    ]
   end
 
   defp deps do
