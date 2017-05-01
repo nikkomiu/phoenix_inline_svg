@@ -41,7 +41,7 @@ If you have set up the import in the `web.ex` file a view can use
 this module by adding:
 
 ```
-<%= svg_image("home") %>
+<%= svg_image(@conn, "home") %>
 ```
 
 Where `home` is the name of the SVG file you want to load.
@@ -65,7 +65,7 @@ There is an optional argument in the function to allow for breaking up
 SVG files into collections (or folders on the filesystem):
 
 ```
-<%= svg_image("user", "fontawesome") %>
+<%= svg_image(@conn, "user", "fontawesome") %>
 ```
 
 ```
