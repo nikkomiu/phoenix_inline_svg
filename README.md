@@ -40,8 +40,8 @@ end
 If you have set up the import in the `web.ex` file a view can use
 this module by adding:
 
-```
-<%= svg_image(@conn, "home") %>
+```elixir
+<%= PhoenixInlineSvg.Helpers.svg_image(@conn, "home") %>
 ```
 
 Where `home` is the name of the SVG file you want to load.
