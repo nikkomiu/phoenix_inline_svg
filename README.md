@@ -59,6 +59,19 @@ By default this will load the SVG file from:
 /priv/static/svg/generic/home.svg
 ```
 
+Optionally, you can pass in the key `extra_classes` to `svg_image` to add add
+arbitrary class names to the `i` element.
+
+```elixir
+<%= PhoenixInlineSvg.Helpers.svg_image(@conn, "home", extra_classes: "jumbo") %>
+```
+
+```HTML
+<i class="generic-svgs generic-home-svg jumbo">
+  <svg>...</svg>
+</i>
+```
+
 ### Collections
 
 There is an optional argument in the function to allow for breaking up
@@ -78,6 +91,19 @@ This will load the SVG file from:
 
 ```
 /priv/static/svg/fontawesome/user.svg
+```
+
+Optionally, you can pass in the key `extra_classes` to `svg_image` to add add
+arbitrary class names to the `i` element.
+
+```elixir
+<%= svg_image(@conn, "user", "fontawesome", extra_classes: "jumbo") %>
+```
+
+```HTML
+<i class="fontawesome-svgs fontawesome-home-svg jumbo">
+  <svg>...</svg>
+</i>
 ```
 
 ## Configuration Options
