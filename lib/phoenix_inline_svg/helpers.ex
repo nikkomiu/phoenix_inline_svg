@@ -157,8 +157,34 @@ defmodule PhoenixInlineSvg.Helpers do
   @doc """
   Sends the contents of the SVG file `name` in the directory.
 
+  Returns a safe HTML string with the contents of the SVG file wrapped in an `i`
+  HTML element with the gernerated classes and extra classes passed in by the
+  user using the `extra_classes` key.
+
+  ## Examples
+    ```
+    <%= svg_image(@conn, "home", extra_classes: "jumbo" ) %>
+    ```
+
+    Will result in output of:
+    ```
+    <i class="generic-svgs generic-home-svg jumbo">
+      <svg>...</svg>
+    </i>
+    ```
+
+  """
+  def svg_image(conn, name, [extra_classes: extra_classes]) do
+    svg_image(conn, name, config_or_default(:default_collection, "generic"), extra_classes: extra_classes)
+  end
+
+
+  @doc """
+  Sends the contents of the SVG file `name` in the directory.
+
   Returns a safe HTML string with the contents of the SVG file
-  wrapped in an `i` HTML element with classes.
+  wrapped in an `i` HTML element with classes. It allows for the passing of
+  extra classes to add to the i elemnt when using the key `extra_classes`.
 
   ## Examples
 
@@ -173,11 +199,22 @@ defmodule PhoenixInlineSvg.Helpers do
     </i>
     ```
 
+    ```
+    <%= svg_image(@conn, "user", "fontawesome", extra_classes: "jumbo") %>
+    ```
+
+    Will result in the output:
+    ```
+    <i class="fontawesome-svgs fontawesome-home-svg jumbo">
+      <svg>...</svg>
+    </i>
+    ```
+
   """
-  def svg_image(conn, name, collection) do
+  def svg_image(conn, name, collection, opts \\ []) do
     "#{collection}/#{name}.svg"
     |> read_svg_file(conn)
-    |> wrap_svg(collection, name)
+    |> wrap_svg(collection, name, opts)
     |> safety_string()
   end
 
@@ -185,8 +222,9 @@ defmodule PhoenixInlineSvg.Helpers do
     {:safe, html}
   end
 
-  defp wrap_svg(svg_contents, cat, name) do
-    "<i class='#{cat}-svgs #{cat}-#{name}-svg'>#{svg_contents}</i>"
+  defp wrap_svg(svg_contents, cat, name, opts \\ []) do
+    extra_classes = opts[:extra_classes] || ""
+    "<i class='#{cat}-svgs #{cat}-#{name}-svg #{extra_classes}'>#{svg_contents}</i>"
   end
 
   defp read_svg_from_path(path) do
