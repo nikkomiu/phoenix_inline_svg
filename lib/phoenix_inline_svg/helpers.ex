@@ -98,7 +98,7 @@ defmodule PhoenixInlineSvg.Helpers do
 
     collection_sets =
       svgs_path
-      |> File.ls!()
+      |> File.ls!
       |> Enum.filter(fn(e) -> File.dir?(Path.join(svgs_path, e)) end)
       |> Enum.flat_map(fn(coll) ->
         coll_path =
@@ -106,7 +106,7 @@ defmodule PhoenixInlineSvg.Helpers do
           |> Path.join(coll)
 
         coll_path
-        |> File.ls!()
+        |> File.ls!
         |> Enum.filter(fn(e) -> File.regular?(Path.join(coll_path, e)) end)
         |> Enum.map(fn(e) -> {coll, e} end)
       end)
@@ -117,10 +117,9 @@ defmodule PhoenixInlineSvg.Helpers do
             unquote(collection)) do
           unquote(
             [svgs_path, collection, name]
-            |> Path.join()
-            |> read_svg_from_path()
-            |> wrap_svg(collection, name)
-            |> safety_string()
+            |> Path.join
+            |> read_svg_from_path
+            |> safety_string
           )
         end
       end
@@ -177,16 +176,11 @@ defmodule PhoenixInlineSvg.Helpers do
   def svg_image(conn, name, collection) do
     "#{collection}/#{name}.svg"
     |> read_svg_file(conn)
-    |> wrap_svg(collection, name)
-    |> safety_string()
+    |> safety_string
   end
 
   defp safety_string(html) do
     {:safe, html}
-  end
-
-  defp wrap_svg(svg_contents, cat, name) do
-    "<i class='#{cat}-svgs #{cat}-#{name}-svg'>#{svg_contents}</i>"
   end
 
   defp read_svg_from_path(path) do
@@ -207,8 +201,8 @@ defmodule PhoenixInlineSvg.Helpers do
       config_or_default(:dir, "priv/static/svg/"),
       icon_path
     ]
-    |> Path.join()
-    |> read_svg_from_path()
+    |> Path.join
+    |> read_svg_from_path
   end
 
   defp config_or_default(config, default) do
