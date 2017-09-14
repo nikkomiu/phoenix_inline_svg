@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 
-## Setup user
-mkdir -p ~/.hex
-echo '{username,<<"'${HEX_USERNAME}'">>}.' > ~/.hex/hex.config
-echo '{encrypted_key,<<"'${HEX_KEY}'">>}.' >> ~/.hex/hex.config
+# Log In
+mix hex.user auth <<EOF
+${HEX_USERNAME}
+${HEX_PASSWORD}
+EOF
 
+# Publish
 mix hex.publish <<EOF
 
 y
 EOF
 
+# Publish Docs
 mix hex.publish docs <<EOF
 
 y
