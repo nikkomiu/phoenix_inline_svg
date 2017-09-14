@@ -10,10 +10,12 @@ EOF
 mix hex.publish <<EOF
 
 y
+${HEX_PASSWORD}
 EOF
 
 # Publish Docs
 mix hex.publish docs <<EOF
 
 y
+${HEX_PASSWORD}
 EOF
