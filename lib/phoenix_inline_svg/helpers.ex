@@ -96,34 +96,38 @@ defmodule PhoenixInlineSvg.Helpers do
     svgs_path = Application.app_dir(app_name,
         config_or_default(:dir, "priv/static/svg/"))
 
-    collection_sets =
-      svgs_path
-      |> File.ls!
-      |> Enum.filter(fn(e) -> File.dir?(Path.join(svgs_path, e)) end)
-      |> Enum.flat_map(fn(coll) ->
-        coll_path =
-          svgs_path
-          |> Path.join(coll)
+    case File.ls(svgs_path) do
+      {:ok, listed_files} ->
+        collection_sets =
+          listed_files
+          |> Enum.filter(fn(e) -> File.dir?(Path.join(svgs_path, e)) end)
+          |> Enum.flat_map(fn(coll) ->
+            coll_path =
+              svgs_path
+              |> Path.join(coll)
 
-        coll_path
-        |> File.ls!
-        |> Enum.filter(fn(e) -> File.regular?(Path.join(coll_path, e)) end)
-        |> Enum.map(fn(e) -> {coll, e} end)
-      end)
+            coll_path
+            |> File.ls!
+            |> Enum.filter(fn(e) -> File.regular?(Path.join(coll_path, e)) end)
+            |> Enum.map(fn(e) -> {coll, e} end)
+          end)
 
-    Enum.map(collection_sets, fn({collection, name}) ->
-      quote do
-        def svg_image(unquote(name |> String.split(".") |> List.first),
-            unquote(collection)) do
-          unquote(
-            [svgs_path, collection, name]
-            |> Path.join
-            |> read_svg_from_path
-            |> safety_string
-          )
-        end
-      end
-    end)
+        Enum.map(collection_sets, fn({collection, name}) ->
+          quote do
+            def svg_image(unquote(name |> String.split(".") |> List.first),
+                unquote(collection)) do
+              unquote(
+                [svgs_path, collection, name]
+                |> Path.join
+                |> read_svg_from_path
+                |> safety_string
+              )
+            end
+          end
+        end)
+
+      _ -> nil
+    end
   end
 
   defmacro __using__(_) do
