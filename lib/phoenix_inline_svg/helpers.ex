@@ -94,36 +94,11 @@ defmodule PhoenixInlineSvg.Helpers do
   """
   defmacro __using__([otp_app: app_name]) do
     svgs_path = Application.app_dir(app_name,
-        config_or_default(:dir, "priv/static/svg/"))
+      config_or_default(:dir, "priv/static/svg/"))
 
-    collection_sets =
-      svgs_path
-      |> File.ls!
-      |> Enum.filter(fn(e) -> File.dir?(Path.join(svgs_path, e)) end)
-      |> Enum.flat_map(fn(coll) ->
-        coll_path =
-          svgs_path
-          |> Path.join(coll)
-
-        coll_path
-        |> File.ls!
-        |> Enum.filter(fn(e) -> File.regular?(Path.join(coll_path, e)) end)
-        |> Enum.map(fn(e) -> {coll, e} end)
-      end)
-
-    Enum.map(collection_sets, fn({collection, name}) ->
-      quote do
-        def svg_image(unquote(name |> String.split(".") |> List.first),
-            unquote(collection)) do
-          unquote(
-            [svgs_path, collection, name]
-            |> Path.join
-            |> read_svg_from_path
-            |> safety_string
-          )
-        end
-      end
-    end)
+    svgs_path
+    |> find_collection_sets
+    |> Enum.map(&create_cached_svg_image(&1, svgs_path))
   end
 
   defmacro __using__(_) do
@@ -211,6 +186,43 @@ defmodule PhoenixInlineSvg.Helpers do
         default
       {:ok, data} ->
         data
+    end
+  end
+
+  defp find_collection_sets(svgs_path) do
+    case File.ls(svgs_path) do
+      {:ok, listed_files} ->
+        listed_files
+        |> Stream.filter(fn(e) -> File.dir?(Path.join(svgs_path, e)) end)
+        |> Stream.flat_map(&map_collection(&1, svgs_path))
+        |> Enum.into([])
+      _ -> []
+    end
+  end
+
+  defp map_collection(coll, svgs_path) do
+    coll_path = Path.join(svgs_path, coll)
+
+    coll_path
+    |> File.ls!
+    |> Stream.map(&Path.join(coll_path, &1))
+    |> Stream.filter(&File.regular?(&1))
+    |> Stream.map(fn(e) -> {coll, e} end)
+    |> Enum.into([])
+  end
+
+  defp create_cached_svg_image({collection, name}, svgs_path) do
+    filename = name |> String.split(".") |> List.first
+
+    quote do
+      def svg_image(unquote(filename), unquote(collection)) do
+        unquote(
+          [svgs_path, collection, name]
+          |> Path.join
+          |> read_svg_from_path
+          |> safety_string
+        )
+      end
     end
   end
 end
