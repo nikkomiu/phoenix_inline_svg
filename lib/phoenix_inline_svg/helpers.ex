@@ -164,7 +164,25 @@ defmodule PhoenixInlineSvg.Helpers do
       apply_opt(acc, opt, value)
     end)
   end
+
+  defp apply_opt(html, :class, value), do: append_html_attribute(html, "class", value)
+  defp apply_opt(html, :id, value), do: append_html_attribute(html, "id", value)
   defp apply_opt(_, opt, _), do: raise "Invalid option #{opt}!"
+
+  defp append_html_attribute(html, attribute, value) do
+    html =
+      case String.contains?(html, "#{attribute}=") do
+        false -> append_empty_opt(html, attribute)
+        true -> html
+      end
+
+    Regex.replace(~r/#{attribute}=*"/, html, "#{attribute}=\"#{value} \\g{1}")
+  end
+
+  defp append_empty_opt(html, opt) do
+    String.replace(html, "<svg", "<svg #{opt}=\"\"")
+  end
+
   defp safety_string(html) do
     {:safe, html}
   end
