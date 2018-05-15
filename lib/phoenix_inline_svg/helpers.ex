@@ -8,23 +8,22 @@ defmodule PhoenixInlineSvg.Helpers do
   The preferred way of using this library is to add the helpers to the quoted
   `view` in your `web.ex` file.
 
-  ```elixir
-  def view do
-    quote do
-      use PhoenixInlineSvg.Helpers, otp_app: :phoenix_inline_svg
-    end
-  end
-  ```
+      def view do
+        quote do
+          use PhoenixInlineSvg.Helpers, otp_app: :phoenix_inline_svg
+        end
+      end
 
   Using the new way you can get svg images using the methods:
 
-    ```elixir
-    # Get an image with the default collection
-    svg_image("image_name")
+      # Get an image with the default collection
+      svg_image("image_name")
 
-    # Get an image with a different collection
-    svg_image("image_name", "collection_name")
-    ```
+      # Get an image with a different collection
+      svg_image("image_name", "collection_name")
+
+      # Get an image and append html attributes to svg tag
+      svg_image("image_name", class: "elixir-is-awesome", id: "inline-svg")
 
   ## Old Way
 
@@ -32,13 +31,12 @@ defmodule PhoenixInlineSvg.Helpers do
   `web/web.ex` which will always pull the SVG files from the disk (unless you
   are using a caching class).
 
-    ```
-    def view do
-      quote do
-        import PhoenixInlineSvg.Helpers
+
+      def view do
+        quote do
+          import PhoenixInlineSvg.Helpers
+        end
       end
-    end
-    ```
 
   *Note:* If you are setting a custom directory for the SVG files and are using
   Exrm or Distillery, you will need to ensure that the directory you set is in
@@ -47,15 +45,12 @@ defmodule PhoenixInlineSvg.Helpers do
   ## In Both Configurations
 
   By default SVG files are loaded from:
-  ```
   priv/static/svg/
-  ```
 
   The directory where SVG files are loaded from can be configured
   by setting the configuration variable:
-  ```
-  config :phoenix_inline_svg, dir: "some/other/dir"
-  ```
+
+      config :phoenix_inline_svg, dir: "some/other/dir"
 
   Where `some/other/dir` is a directory located in the Phoenix
   application directory.
@@ -76,21 +71,19 @@ defmodule PhoenixInlineSvg.Helpers do
 
   ## Examples
 
-    In the quoted `view` def of the `web/web/ex` you should add:
+  In the quoted `view` def of the `web/web/ex` you should add:
 
-    ```elixir
-    use PhoenixInlineSvg.Helpers, otp_app: :my_app_name
-    ```
+      use PhoenixInlineSvg.Helpers, otp_app: :my_app_name
 
-    This will create pre-built functions:
+  This will create pre-built functions:
 
-    ```elixir
-    # Default collection
-    svg_image("image_name")
+      # Default collection
 
-    # Named collection
-    svg_image("image_name", "collection_name")
-    ```
+      svg_image("image_name")
+
+      # Named collection
+      svg_image("image_name", "collection_name")
+
   """
   defmacro __using__([otp_app: app_name]) do
     svgs_path = Application.app_dir(app_name,
@@ -106,51 +99,84 @@ defmodule PhoenixInlineSvg.Helpers do
   end
 
   @doc """
-  Sends the contents of the SVG file `name` in the directory.
+  Sends the contents of the SVG file `name` in the configured
+  directory.
 
   Returns a safe HTML string with the contents of the SVG file
-  wrapped in an `i` HTML element with classes.
+  using the `default_collection` configuration.
+  "generic" value.
 
   ## Examples
-    ```
-    <%= svg_image(@conn, "home") %>
-    ```
+      <%= svg_image(@conn, "home") %>
 
-    Will result in output of:
-    ```
-    <i class="generic-svgs generic-home-svg">
-      <svg>...</svg>
-    </i>
-    ```
+  Will result in the output:
+  ```html
+  <svg>...</svg>
+  ```
+
+  The main function is `svg_image/4`.
 
   """
+
   def svg_image(conn, name) do
     svg_image(conn, name, config_or_default(:default_collection, "generic"))
   end
 
   @doc """
-  Sends the contents of the SVG file `name` in the directory.
+  Sends the contents of the SVG file `name` in the directory
+  with extra `opts` options.
 
   Returns a safe HTML string with the contents of the SVG file
-  wrapped in an `i` HTML element with classes.
+  after apply options.
+
+  Available options: `:id, :class`
 
   ## Examples
+      <%= svg_image(@conn, "home", class: "logo", id: "bounce-animation") %>
 
-    ```
-    <%= svg_image(@conn, "user", "fontawesome") %>
-    ```
+  Will result in the output:
 
-    Will result in the output:
-    ```
-    <i class="fontawesome-svgs fontawesome-home-svg">
-      <svg>...</svg>
-    </i>
-    ```
+  ```html
+  <svg class="logo" id="bounce-animation">...</svg>
+  ```
+
+  The main function is `svg_image/4`.
 
   """
   def svg_image(conn, name, opts) when is_list(opts) do
     svg_image(conn, name, config_or_default(:default_collection, "generic"), opts)
   end
+
+  @doc """
+  Sends the contents of the SVG file `name` in the `context`
+  directory with extra `opts` options.
+
+  Returns a safe HTML string with the contents of the SVG file
+  using the `default_collection` configuration.
+  `generic` value after apply options.
+
+  ## Examples
+  Find SVG file inside of "fontawesome" folder
+
+      <%= svg_image(@conn, "user", "fontawesome") %>
+
+  Will result in the output:
+  ```html
+  <svg>...</svg>
+  ```
+
+  Find SVG file inside of "icons" folder and add
+  class "fa fa-share" and id "bounce-animation"
+
+      <%= svg_image(@conn, "user", "icons", class: "fa fa-share", id: "bounce-animation") %>
+
+  Will result in the output:
+  ```html
+  <svg class="fa fa-share" id="bounce-animation">...</svg>
+  ```
+
+  """
+
   def svg_image(conn, name, collection, opts \\ []) do
     "#{collection}/#{name}.svg"
     |> read_svg_file(conn)
