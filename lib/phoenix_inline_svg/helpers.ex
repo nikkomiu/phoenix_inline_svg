@@ -148,12 +148,23 @@ defmodule PhoenixInlineSvg.Helpers do
     ```
 
   """
-  def svg_image(conn, name, collection) do
+  def svg_image(conn, name, opts) when is_list(opts) do
+    svg_image(conn, name, config_or_default(:default_collection, "generic"), opts)
+  end
+  def svg_image(conn, name, collection, opts \\ []) do
     "#{collection}/#{name}.svg"
     |> read_svg_file(conn)
+    |> apply_opts(opts)
     |> safety_string
   end
 
+  defp apply_opts(html, []), do: html
+  defp apply_opts(html, opts) do
+    Enum.reduce(opts, html, fn({opt, value}, acc) ->
+      apply_opt(acc, opt, value)
+    end)
+  end
+  defp apply_opt(_, opt, _), do: raise "Invalid option #{opt}!"
   defp safety_string(html) do
     {:safe, html}
   end
