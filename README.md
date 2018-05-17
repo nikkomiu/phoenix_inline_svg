@@ -47,10 +47,8 @@ this module by adding:
 Where `home` is the name of the SVG file you want to load.
 This will output the HTML:
 
-```
-<i class="generic-svgs generic-home-svg">
-  <svg>...</svg>
-</i>
+```html
+<svg>...</svg>
 ```
 
 By default this will load the SVG file from:
@@ -68,10 +66,10 @@ SVG files into collections (or folders on the filesystem):
 <%= svg_image(@conn, "user", "fontawesome") %>
 ```
 
-```
-<i class="fontawesome-svgs fontawesome-home-svg">
-  <svg>...</svg>
-</i>
+Will result in the output:
+
+```html
+<svg>...</svg>
 ```
 
 This will load the SVG file from:
@@ -79,6 +77,22 @@ This will load the SVG file from:
 ```
 /priv/static/svg/fontawesome/user.svg
 ```
+
+### Class and ID
+
+You can also pass an optional class or ID into the function to set
+those properties on the SVG when it is being created.
+
+```
+<%= svg_image(@conn, "home", class: "logo", id: "bounce-animation") %>
+```
+
+Will result in the output:
+
+```html
+<svg class="logo" id="bounce-animation">...</svg>
+```
+
 
 ## Configuration Options
 
