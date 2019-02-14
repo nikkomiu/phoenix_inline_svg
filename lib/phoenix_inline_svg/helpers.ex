@@ -108,6 +108,7 @@ defmodule PhoenixInlineSvg.Helpers do
 
   ## Examples
       <%= svg_image(@conn, "home") %>
+      <%= svg_image(YourAppWeb.Endpoint, "home") %>
 
   Will result in the output:
   ```html
@@ -118,8 +119,8 @@ defmodule PhoenixInlineSvg.Helpers do
 
   """
 
-  def svg_image(conn, name) do
-    svg_image(conn, name, config_or_default(:default_collection, "generic"))
+  def svg_image(conn_or_endpoint, name) do
+    svg_image(conn_or_endpoint, name, config_or_default(:default_collection, "generic"))
   end
 
   @doc """
@@ -133,6 +134,7 @@ defmodule PhoenixInlineSvg.Helpers do
 
   ## Examples
       <%= svg_image(@conn, "home", class: "logo", id: "bounce-animation") %>
+      <%= svg_image(YourAppWeb.Endpoint, "home", class: "logo", id: "bounce-animation") %>
 
   Will result in the output:
 
@@ -143,8 +145,8 @@ defmodule PhoenixInlineSvg.Helpers do
   The main function is `svg_image/4`.
 
   """
-  def svg_image(conn, name, opts) when is_list(opts) do
-    svg_image(conn, name, config_or_default(:default_collection, "generic"), opts)
+  def svg_image(conn_or_endpoint, name, opts) when is_list(opts) do
+    svg_image(conn_or_endpoint, name, config_or_default(:default_collection, "generic"), opts)
   end
 
   @doc """
@@ -159,6 +161,7 @@ defmodule PhoenixInlineSvg.Helpers do
   Find SVG file inside of "fontawesome" folder
 
       <%= svg_image(@conn, "user", "fontawesome") %>
+      <%= svg_image(YourAppWeb.Endpoint, "user", "fontawesome") %>
 
   Will result in the output:
   ```html
@@ -169,6 +172,7 @@ defmodule PhoenixInlineSvg.Helpers do
   class "fa fa-share" and id "bounce-animation"
 
       <%= svg_image(@conn, "user", "icons", class: "fa fa-share", id: "bounce-animation") %>
+      <%= svg_image(YourAppWeb.Endpoint, "user", "icons", class: "fa fa-share", id: "bounce-animation") %>
 
   Will result in the output:
   ```html
@@ -177,9 +181,9 @@ defmodule PhoenixInlineSvg.Helpers do
 
   """
 
-  def svg_image(conn, name, collection, opts \\ []) do
+  def svg_image(conn_or_endpoint, name, collection, opts \\ []) do
     "#{collection}/#{name}.svg"
-    |> read_svg_file(conn)
+    |> read_svg_file(conn_or_endpoint)
     |> apply_opts(opts)
     |> safety_string
   end
@@ -225,9 +229,19 @@ defmodule PhoenixInlineSvg.Helpers do
     end
   end
 
-  defp read_svg_file(icon_path, conn) do
+  defp read_svg_file(icon_path, %Plug.Conn{} = conn) do
     [
       Application.app_dir(Phoenix.Controller.endpoint_module(conn).config(:otp_app)),
+      config_or_default(:dir, "priv/static/svg/"),
+      icon_path
+    ]
+    |> Path.join
+    |> read_svg_from_path
+  end
+
+  defp read_svg_file(icon_path, endpoint) do
+    [
+      Application.app_dir(endpoint.config(:otp_app)),
       config_or_default(:dir, "priv/static/svg/"),
       icon_path
     ]
