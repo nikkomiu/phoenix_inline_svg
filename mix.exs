@@ -16,7 +16,7 @@ defmodule PhoenixInlineSvg.Mixfile do
 
   def cli_env() do
     [
-      "coveralls": :test,
+      coveralls: :test,
       "coveralls.detail": :test,
       "coveralls.post": :test,
       "coveralls.html": :test
