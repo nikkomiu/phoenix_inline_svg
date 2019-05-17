@@ -78,9 +78,9 @@ This will load the SVG file from:
 /priv/static/svg/fontawesome/user.svg
 ```
 
-### Class and ID
+### HTML attributes
 
-You can also pass an optional class or ID into the function to set
+You can also pass optional HTML attributes into the function to set
 those properties on the SVG when it is being created.
 
 ```
