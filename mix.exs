@@ -2,15 +2,17 @@ defmodule PhoenixInlineSvg.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :phoenix_inline_svg,
-     version: "1.2.0",
-     elixir: "~> 1.3",
-     deps: deps(),
-     package: package(),
-     description: description(),
-     preferred_cli_env: cli_env(),
-     test_coverage: [tool: ExCoveralls],
-     docs: [extras: ["README.md"]]
+    [
+      app: :phoenix_inline_svg,
+      version: "1.2.0",
+      elixir: "~> 1.3",
+      elixirc_paths: elixirc_paths(Mix.env()),
+      deps: deps(),
+      package: package(),
+      description: description(),
+      preferred_cli_env: cli_env(),
+      test_coverage: [tool: ExCoveralls],
+      docs: [extras: ["README.md"]]
     ]
   end
 
@@ -23,12 +25,19 @@ defmodule PhoenixInlineSvg.Mixfile do
     ]
   end
 
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
   defp deps do
-    [{:phoenix, "~> 1.2"},
-     {:inch_ex, "~> 1.0", only: [:dev, :test]},
-     {:credo, "~> 0.5", only: [:dev, :test]},
-     {:excoveralls, "~> 0.5", only: [:dev, :test]},
-     {:ex_doc, ">= 0.20.0", only: [:dev, :test], runtime: false}]
+    [
+      {:phoenix, "~> 1.4"},
+      {:floki, "~> 0.21.0"},
+      {:inch_ex, "~> 1.0", only: [:dev, :test]},
+      {:credo, "~> 0.5", only: [:dev, :test]},
+      {:excoveralls, "~> 0.5", only: [:dev, :test]},
+      {:ex_doc, ">= 0.20.0", only: [:dev, :test], runtime: false}
+    ]
   end
 
   defp description do

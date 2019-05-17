@@ -191,26 +191,10 @@ defmodule PhoenixInlineSvg.Helpers do
   defp apply_opts(html, []), do: html
   defp apply_opts(html, opts) do
     Enum.reduce(opts, html, fn({opt, value}, acc) ->
-      apply_opt(acc, opt, value)
+      acc
+      |> Floki.attr("svg", to_string(opt), &String.trim("#{&1} #{value}"))
+      |> Floki.raw_html
     end)
-  end
-
-  defp apply_opt(html, :class, value), do: append_html_attribute(html, "class", value)
-  defp apply_opt(html, :id, value), do: append_html_attribute(html, "id", value)
-  defp apply_opt(_, opt, _), do: raise "Invalid option #{opt}!"
-
-  defp append_html_attribute(html, attribute, value) do
-    html =
-      case String.contains?(html, "#{attribute}=") do
-        false -> append_empty_opt(html, attribute)
-        true -> html
-      end
-
-    Regex.replace(~r/#{attribute}=*"/, html, "#{attribute}=\"#{value} \\g{1}")
-  end
-
-  defp append_empty_opt(html, opt) do
-    String.replace(html, "<svg", "<svg #{opt}=\"\"")
   end
 
   defp safety_string(html) do
