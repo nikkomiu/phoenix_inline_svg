@@ -36,7 +36,7 @@ defmodule PhoenixInlineSvg.Mixfile do
       {:inch_ex, "~> 1.0", only: [:dev, :test]},
       {:credo, "~> 0.5", only: [:dev, :test]},
       {:excoveralls, "~> 0.5", only: [:dev, :test]},
-      {:ex_doc, ">= 0.20.0", only: [:dev, :test], runtime: false}
+      {:ex_doc, ">= 0.20.0", only: [:dev], runtime: false}
     ]
   end
 
