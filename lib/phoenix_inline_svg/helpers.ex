@@ -191,8 +191,13 @@ defmodule PhoenixInlineSvg.Helpers do
   defp apply_opts(html, []), do: html
   defp apply_opts(html, opts) do
     Enum.reduce(opts, html, fn({opt, value}, acc) ->
+      attr =
+        opt
+        |> to_string
+        |> String.replace("_", "-")
+
       acc
-      |> Floki.attr("svg", to_string(opt), &String.trim("#{&1} #{value}"))
+      |> Floki.attr("svg", attr, &String.trim("#{&1} #{value}"))
       |> Floki.raw_html
     end)
   end
