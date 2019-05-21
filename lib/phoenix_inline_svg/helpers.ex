@@ -202,30 +202,38 @@ defmodule PhoenixInlineSvg.Helpers do
       {:ok, listed_files} ->
         listed_files
         |> Stream.filter(fn(e) -> File.dir?(Path.join(svgs_path, e)) end)
-        |> Stream.flat_map(&map_collection(&1, svgs_path))
-        |> Enum.into([])
-      _ -> []
+        |> Enum.flat_map(&map_collection(&1, svgs_path))
+      _ ->
+        []
     end
   end
 
-  defp map_collection(coll, svgs_path) do
-    coll_path = Path.join(svgs_path, coll)
+  defp map_collection(collection, svgs_path) do
+    collection_path =
+      Path.join(svgs_path, collection)
 
-    coll_path
+    collection_path
     |> File.ls!
-    |> Stream.map(&Path.join(coll_path, &1))
-    |> Stream.filter(&File.regular?(&1))
-    |> Stream.map(fn(e) -> {coll, e} end)
-    |> Enum.into([])
+    |> Stream.map(&Path.join(collection_path, &1))
+    |> Stream.flat_map(&to_file_path/1)
+    |> Enum.map(&{collection, &1})
+  end
+
+  defp to_file_path(path)do
+    if File.dir?(path) do
+      path
+      |> File.ls!
+      |> Stream.map(&Path.join(path, &1))
+      |> Enum.flat_map(&to_file_path/1)
+    else
+      [path]
+    end
   end
 
   defp create_cached_svg_image({collection, name}) do
     filename =
-      name
-      |> String.split("/")
-      |> List.last
-      |> String.split(".") 
-      |> List.first
+      hd Regex.run(~r|.*/#{collection}/(.*)\.svg|, name, capture: :all_but_first)
+
     svg = read_svg_from_path(name)
 
     generic_funcs = quote do

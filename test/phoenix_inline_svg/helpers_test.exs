@@ -18,7 +18,8 @@ defmodule PhoenixInlineSvg.HelpersTest do
 
   describe "static svg_image/3" do
     test "renders an svg with an html class" do
-      actual = PhoenixInlineSvg.Helpers.svg_image(TestApp.Endpoint, "test_svg", class: "fill-current")
+      actual =
+        PhoenixInlineSvg.Helpers.svg_image(TestApp.Endpoint, "test_svg", class: "fill-current")
 
       assert actual == {:safe, ~s|<svg class="fill-current"></svg>|}
     end
@@ -30,7 +31,10 @@ defmodule PhoenixInlineSvg.HelpersTest do
     end
 
     test "renders an svg with an html class appended to an existing class" do
-      actual = PhoenixInlineSvg.Helpers.svg_image(TestApp.Endpoint, "test_with_class_svg", class: "fill-current")
+      actual =
+        PhoenixInlineSvg.Helpers.svg_image(TestApp.Endpoint, "test_with_class_svg",
+          class: "fill-current"
+        )
 
       assert actual == {:safe, ~s|<svg class="existing-class fill-current"></svg>|}
     end
@@ -42,7 +46,11 @@ defmodule PhoenixInlineSvg.HelpersTest do
     end
 
     test "renders an svg with an html class and id" do
-      actual = PhoenixInlineSvg.Helpers.svg_image(TestApp.Endpoint, "test_svg", class: "fill-current", id: "the-image")
+      actual =
+        PhoenixInlineSvg.Helpers.svg_image(TestApp.Endpoint, "test_svg",
+          class: "fill-current",
+          id: "the-image"
+        )
 
       assert actual == {:safe, ~s|<svg id="the-image" class="fill-current"></svg>|}
     end
@@ -68,6 +76,12 @@ defmodule PhoenixInlineSvg.HelpersTest do
     test "doesn't generate 1 arity functions for custom collections" do
       assert_raise FunctionClauseError, fn -> svg_image("custom_collection") end
     end
+
+    test "renders svg from subdir" do
+      actual = svg_image("sub_dir/in_sub_dir")
+
+      assert actual == {:safe, ~s|<svg id="in-sub-dir"></svg>|}
+    end
   end
 
   describe "dynamic svg_image/2" do
@@ -84,7 +98,15 @@ defmodule PhoenixInlineSvg.HelpersTest do
     end
 
     test "doesn't generate 2 arity functions for custom collections" do
-      assert_raise FunctionClauseError, fn -> svg_image("custom_collection", class: "fill-current") end
+      assert_raise FunctionClauseError, fn ->
+        svg_image("custom_collection", class: "fill-current")
+      end
+    end
+
+    test "renders an svg from subdir" do
+      actual = svg_image("sub_dir/in_sub_dir", "custom")
+
+      assert actual == {:safe, ~s|<svg id="in-custom-collection-sub-dir"></svg>|}
     end
   end
 
