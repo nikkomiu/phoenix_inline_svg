@@ -228,19 +228,19 @@ defmodule PhoenixInlineSvg.Helpers do
       |> List.first
     svg = read_svg_from_path(name)
 
-    quote do
+    generic_funcs = quote do
       def svg_image(unquote(filename)) do
-        unquote(PhoenixInlineSvg.Utils.safety_string(svg))
-      end
-
-      def svg_image(unquote(filename), unquote(collection)) do
-        unquote(PhoenixInlineSvg.Utils.safety_string(svg))
+        svg_image(unquote(filename), unquote(collection), [])
       end
 
       def svg_image(unquote(filename), opts) when is_list(opts) do
-        unquote(svg)
-        |> PhoenixInlineSvg.Utils.insert_attrs(opts)
-        |> PhoenixInlineSvg.Utils.safety_string
+        svg_image(unquote(filename), unquote(collection), opts)
+      end
+    end
+
+    explicit_funcs = quote do
+      def svg_image(unquote(filename), unquote(collection)) do
+        svg_image(unquote(filename), unquote(collection), [])
       end
 
       def svg_image(unquote(filename), unquote(collection), opts) do
@@ -249,5 +249,8 @@ defmodule PhoenixInlineSvg.Helpers do
         |> PhoenixInlineSvg.Utils.safety_string
       end
     end
+
+    [PhoenixInlineSvg.Utils.insert_generic_funcs(generic_funcs, collection), explicit_funcs]
+
   end
 end

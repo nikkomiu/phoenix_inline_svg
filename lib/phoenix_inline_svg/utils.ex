@@ -13,4 +13,7 @@ defmodule PhoenixInlineSvg.Utils do
   def safety_string(html) do
     {:safe, html}
   end
+
+  def insert_generic_funcs(ast, "generic"), do: ast
+  def insert_generic_funcs(_ast, _collection), do: nil
 end

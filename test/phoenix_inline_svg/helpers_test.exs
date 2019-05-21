@@ -64,6 +64,10 @@ defmodule PhoenixInlineSvg.HelpersTest do
 
       assert actual == {:safe, ~s|<svg></svg>|}
     end
+
+    test "doesn't generate 1 arity functions for custom collections" do
+      assert_raise FunctionClauseError, fn -> svg_image("custom_collection") end
+    end
   end
 
   describe "dynamic svg_image/2" do
@@ -77,6 +81,10 @@ defmodule PhoenixInlineSvg.HelpersTest do
       actual = svg_image("custom_collection", "custom")
 
       assert actual == {:safe, ~s|<svg id="custom"></svg>|}
+    end
+
+    test "doesn't generate 2 arity functions for custom collections" do
+      assert_raise FunctionClauseError, fn -> svg_image("custom_collection", class: "fill-current") end
     end
   end
 
