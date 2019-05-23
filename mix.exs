@@ -4,7 +4,7 @@ defmodule PhoenixInlineSvg.Mixfile do
   def project do
     [
       app: :phoenix_inline_svg,
-      version: "1.2.1",
+      version: "1.3.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
@@ -52,6 +52,7 @@ defmodule PhoenixInlineSvg.Mixfile do
     [
       maintainers: ["Nikko Miu <nikkoamiu@gmail.com>"],
       licenses: ["MIT"],
+      files: ~w(lib mix.exs README.md LICENSE),
       links: %{github: "https://github.com/nikkomiu/phoenix_inline_svg"}
     ]
   end
