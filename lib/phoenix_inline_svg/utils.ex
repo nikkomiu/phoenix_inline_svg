@@ -5,8 +5,13 @@ defmodule PhoenixInlineSvg.Utils do
 
   def insert_attrs(html, attrs) do
     Enum.reduce(attrs, html, fn {attr, value}, acc ->
+      attr =
+        attr
+        |> to_string
+        |> String.replace("_", "-")
+
       acc
-      |> Floki.attr("svg", to_string(attr), &String.trim("#{&1} #{value}"))
+      |> Floki.attr("svg", attr, &String.trim("#{&1} #{value}"))
       |> Floki.raw_html()
     end)
   end
@@ -16,8 +21,7 @@ defmodule PhoenixInlineSvg.Utils do
   end
 
   def insert_generic_funcs(ast, collection) do
-    default =
-      config_or_default(:default_collection, "generic")
+    default = config_or_default(:default_collection, "generic")
 
     if default == collection do
       ast
