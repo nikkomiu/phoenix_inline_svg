@@ -16,12 +16,11 @@ Add `phoenix_inline_svg` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:phoenix_inline_svg, "~> 1.1"}]
+  [{:phoenix_inline_svg, "~> 1.2"}]
 end
 ```
 
-To make using this package easier add the helpers for this
-package as an import to your `web.ex` under the view quote:
+## Usage
 
 ```elixir
 def view do
@@ -33,18 +32,14 @@ def view do
 end
 ```
 
-## Usage
-
 ### Generic Collection
 
-If you have set up the import in the `web.ex` file a view can use
-this module by adding:
-
 ```elixir
-<%= PhoenixInlineSvg.Helpers.svg_image(@conn, "home") %>
+<%= svg_image("home") %>
 ```
 
 Where `home` is the name of the SVG file you want to load.
+
 This will output the HTML:
 
 ```html
@@ -59,11 +54,10 @@ By default this will load the SVG file from:
 
 ### Collections
 
-There is an optional argument in the function to allow for breaking up
-SVG files into collections (or folders on the filesystem):
+There is an optional argument in the function to allow for breaking up SVG files into collections (or folders on the filesystem):
 
 ```
-<%= svg_image(@conn, "user", "fontawesome") %>
+<%= svg_image("user", "fontawesome") %>
 ```
 
 Will result in the output:
@@ -81,10 +75,10 @@ This will load the SVG file from:
 ### HTML attributes
 
 You can also pass optional HTML attributes into the function to set
-those properties on the SVG when it is being created.
+those properties on the SVG.
 
 ```
-<%= svg_image(@conn, "home", class: "logo", id: "bounce-animation") %>
+<%= svg_image("home", class: "logo", id: "bounce-animation") %>
 ```
 
 Will result in the output:
@@ -96,26 +90,21 @@ Will result in the output:
 
 ## Configuration Options
 
-There are several _optional_ configuration settings for adjusting
-this package to your needs:
+There are several _optional_ configuration settings for adjusting this package to your needs:
 
 ### Directory
 
-The directory in the project to load image assets from. If you are using Exrm
-make sure you use a directory that is outputted to the projects `lib` directory
-after the release has been created.
+The directory in the project to load image assets from. If you are using Exrm make sure you use a directory that is outputted to the projects `lib` directory after the release has been created.
 
 ```elixir
 config :phoenix_inline_svg, dir: "/priv/somewhere/"
 ```
 
-The default value is `/priv/static/svg/` and is a directory relative to the
-project's root directory.
+The default value is `/priv/static/svg/` and is a directory relative to the project's root directory.
 
 ### Default Collection
 
-The name of the collection to use by default. This is usually overridden to be
-the primary collection of images.
+The name of the collection to use by default. This is usually overridden to be the primary collection of images.
 
 ```elixir
 config :phoenix_inline_svg, default_collection: "fontawesome"
@@ -140,19 +129,28 @@ The default value is:
 </svg>
 ```
 
-## Caching SVGs
+## Old Style
 
-**For Use with Import Only**: Do not use the caching class if you are using the
-`use PhoenixInlineSvg.Helpers, otp_app: :my_app_name` method due to static methods.
+To use this package in the old style, add the following line to the view function in your `my_app_web.ex` file.
 
-To improve the response time of the applicaiton it is recommended to cache the SVG files
-that are loaded from the disk to improve the performance by not fetching from the disk on
-every web request that has SVG assets.
+```elixir
+def view do
+  quote do
+    ...
+    import PhoenixInlineSvg.Helpers
+    ...
+  end
+end
+```
 
-The best way to set up caching is to create a new file in your applicaiton with the path:
-`lib/__MY_APP_NAME__/inline_svg_cache.ex`
+### Caching SVGs
 
-And the contents:
+Since the old style will read the images from disk on every request, you can enable caching through a GenServer.
+
+**For Use with Import Only**: If you use the new style, `use PhoenixInlineSvg.Helpers, otp_app: :my_app_name`, your images are already cached since they are loaded into functions at compile time.
+
+
+Add the following code to the file `lib/__MY_APP_NAME__/inline_svg_cache.ex`.
 
 **Note**: Be sure to change **\_\_MY_APP_NAME\_\_** to the name of your app.
 
