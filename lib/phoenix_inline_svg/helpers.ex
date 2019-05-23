@@ -71,7 +71,7 @@ defmodule PhoenixInlineSvg.Helpers do
   """
   defmacro __using__([otp_app: app_name] = _opts) do
     svgs_path = Application.app_dir(app_name,
-      config_or_default(:dir, "priv/static/svg/"))
+      PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/"))
 
     svgs_path
     |> find_collection_sets
@@ -100,7 +100,7 @@ defmodule PhoenixInlineSvg.Helpers do
   """
 
   def svg_image(conn_or_endpoint, name) do
-    svg_image(conn_or_endpoint, name, config_or_default(:default_collection, "generic"))
+    svg_image(conn_or_endpoint, name, PhoenixInlineSvg.Utils.config_or_default(:default_collection, "generic"))
   end
 
   @doc """
@@ -121,7 +121,7 @@ defmodule PhoenixInlineSvg.Helpers do
 
   """
   def svg_image(conn_or_endpoint, name, attrs) when is_list(attrs) do
-    svg_image(conn_or_endpoint, name, config_or_default(:default_collection, "generic"), attrs)
+    svg_image(conn_or_endpoint, name, PhoenixInlineSvg.Utils.config_or_default(:default_collection, "generic"), attrs)
   end
 
   @doc """
@@ -161,7 +161,7 @@ defmodule PhoenixInlineSvg.Helpers do
       {:ok, result} ->
         String.trim(result)
       {:error, _} ->
-        config_or_default(:not_found,
+        PhoenixInlineSvg.Utils.config_or_default(:not_found,
           "<svg viewbox='0 0 60 60'>" <>
           "<text x='0' y='40' font-size='30' font-weight='bold'" <>
           "font-family='monospace'>Err</text></svg>")
@@ -171,7 +171,7 @@ defmodule PhoenixInlineSvg.Helpers do
   defp read_svg_file(icon_path, %Plug.Conn{} = conn) do
     [
       Application.app_dir(Phoenix.Controller.endpoint_module(conn).config(:otp_app)),
-      config_or_default(:dir, "priv/static/svg/"),
+      PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/"),
       icon_path
     ]
     |> Path.join
@@ -181,21 +181,13 @@ defmodule PhoenixInlineSvg.Helpers do
   defp read_svg_file(icon_path, endpoint) do
     [
       Application.app_dir(endpoint.config(:otp_app)),
-      config_or_default(:dir, "priv/static/svg/"),
+      PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/"),
       icon_path
     ]
     |> Path.join
     |> read_svg_from_path
   end
 
-  defp config_or_default(config, default) do
-    case Application.fetch_env(:phoenix_inline_svg, config) do
-      :error ->
-        default
-      {:ok, data} ->
-        data
-    end
-  end
 
   defp find_collection_sets(svgs_path) do
     case File.ls(svgs_path) do
@@ -259,6 +251,5 @@ defmodule PhoenixInlineSvg.Helpers do
     end
 
     [PhoenixInlineSvg.Utils.insert_generic_funcs(generic_funcs, collection), explicit_funcs]
-
   end
 end
