@@ -1,6 +1,6 @@
 defmodule PhoenixInlineSvg.HelpersTest do
   use ExUnit.Case, async: true
-  use PhoenixInlineSvg.Helpers, otp_app: :phoenix_inline_svg
+  use PhoenixInlineSvg.Helpers
 
   setup do
     start_supervised!(TestApp.Endpoint)
@@ -68,7 +68,7 @@ defmodule PhoenixInlineSvg.HelpersTest do
 
   describe "dynamic svg_image/1" do
     test "renders an svg from a generated function" do
-      actual = svg_image("test_svg")
+      actual = svg_image("test_svg_macro")
 
       assert actual == {:safe, ~s|<svg></svg>|}
     end
@@ -78,7 +78,7 @@ defmodule PhoenixInlineSvg.HelpersTest do
     end
 
     test "renders svg from subdir" do
-      actual = svg_image("sub_dir/in_sub_dir")
+      actual = svg_image("sub_dir/in_sub_dir_macro")
 
       assert actual == {:safe, ~s|<svg id="in-sub-dir"></svg>|}
     end
@@ -86,25 +86,25 @@ defmodule PhoenixInlineSvg.HelpersTest do
 
   describe "dynamic svg_image/2" do
     test "renders an svg from a generated function that takes a list of attributes" do
-      actual = svg_image("test_svg", class: "fill-current")
+      actual = svg_image("test_svg_macro", class: "fill-current")
 
       assert actual == {:safe, ~s|<svg class="fill-current"></svg>|}
     end
 
     test "renders an svg from a generated function that is from a different collection" do
-      actual = svg_image("custom_collection", "custom")
+      actual = svg_image("custom_collection_macro", "custom")
 
       assert actual == {:safe, ~s|<svg id="custom"></svg>|}
     end
 
     test "doesn't generate 2 arity functions for custom collections" do
       assert_raise FunctionClauseError, fn ->
-        svg_image("custom_collection", class: "fill-current")
+        svg_image("custom_collection_macro", class: "fill-current")
       end
     end
 
     test "renders an svg from subdir" do
-      actual = svg_image("sub_dir/in_sub_dir", "custom")
+      actual = svg_image("sub_dir/in_sub_dir_macro", "custom")
 
       assert actual == {:safe, ~s|<svg id="in-custom-collection-sub-dir"></svg>|}
     end
@@ -112,7 +112,7 @@ defmodule PhoenixInlineSvg.HelpersTest do
 
   describe "dynamic svg_image/3" do
     test "renders an svg from a generated function that is from a different collection and has opts" do
-      actual = svg_image("custom_collection", "custom", class: "fill-current")
+      actual = svg_image("custom_collection_macro", "custom", class: "fill-current")
 
       assert actual == {:safe, ~s|<svg class="fill-current" id="custom"></svg>|}
     end

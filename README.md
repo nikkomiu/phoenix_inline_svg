@@ -26,7 +26,7 @@ end
 def view do
   quote do
     ...
-    use PhoenixInlineSvg.Helpers, otp_app: :my_app_name
+    use PhoenixInlineSvg.Helpers
     ...
   end
 end
@@ -49,7 +49,7 @@ This will output the HTML:
 By default this will load the SVG file from:
 
 ```
-/priv/static/svg/generic/home.svg
+/assets/static/svg/generic/home.svg
 ```
 
 ### Collections
@@ -69,7 +69,7 @@ Will result in the output:
 This will load the SVG file from:
 
 ```
-/priv/static/svg/fontawesome/user.svg
+/assets/static/svg/fontawesome/user.svg
 ```
 
 ### HTML attributes
@@ -94,13 +94,19 @@ There are several _optional_ configuration settings for adjusting this package t
 
 ### Directory
 
-The directory in the project to load image assets from. If you are using Exrm make sure you use a directory that is outputted to the projects `lib` directory after the release has been created.
+The directory in the project from which to load image assets.
+
+If you are using Exrm/Distillery, make sure you use a directory that is outputted to the projects `lib` directory after the release has been created.
 
 ```elixir
+# If you are using the standard way
+config :phoenix_inline_svg, dir: "/assets/somewhere/"
+
+# If you are using the old way
 config :phoenix_inline_svg, dir: "/priv/somewhere/"
 ```
 
-The default value is `/priv/static/svg/` and is a directory relative to the project's root directory.
+The default value is `/assets/static/svg/` for the standard method and `/priv/static/svg` for the old method.
 
 ### Default Collection
 
@@ -147,7 +153,7 @@ end
 
 Since the old style will read the images from disk on every request, you can enable caching through a GenServer.
 
-**For Use with Import Only**: If you use the new style, `use PhoenixInlineSvg.Helpers, otp_app: :my_app_name`, your images are already cached since they are loaded into functions at compile time.
+**For Use with Import Only**: If you use the new style, `use PhoenixInlineSvg.Helpers`, your images are already cached since they are loaded into functions at compile time.
 
 
 Add the following code to the file `lib/__MY_APP_NAME__/inline_svg_cache.ex`.
