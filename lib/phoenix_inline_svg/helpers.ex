@@ -224,9 +224,6 @@ defmodule PhoenixInlineSvg.Helpers do
   end
 
   defp create_cached_svg_image({collection, name}) do
-    IO.puts collection
-    IO.puts name # TODO: Multiple calls to this per image
-
     try do
       filename =
         hd Regex.run(~r|.*/#{collection}/(.*)\.svg|, name, capture: :all_but_first)
