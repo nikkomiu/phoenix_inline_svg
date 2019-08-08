@@ -26,7 +26,7 @@ end
 def view do
   quote do
     ...
-    use PhoenixInlineSvg.Helpers, otp_app: :my_app_name
+    use PhoenixInlineSvg.Helpers
     ...
   end
 end
@@ -94,11 +94,13 @@ There are several _optional_ configuration settings for adjusting this package t
 
 ### Directory
 
-The directory in the project to load image assets from. If you are using Exrm make sure you use a directory that is outputted to the projects `lib` directory after the release has been created.
+The directory in the project to load image assets from.
 
 ```elixir
 config :phoenix_inline_svg, dir: "/priv/somewhere/"
 ```
+
+*Note:* Since all images are cached at compile time by default this directory does not need to be included in the `lib/` directory that is outputted from Exrm.
 
 The default value is `/priv/static/svg/` and is a directory relative to the project's root directory.
 
@@ -147,8 +149,7 @@ end
 
 Since the old style will read the images from disk on every request, you can enable caching through a GenServer.
 
-**For Use with Import Only**: If you use the new style, `use PhoenixInlineSvg.Helpers, otp_app: :my_app_name`, your images are already cached since they are loaded into functions at compile time.
-
+**For Use with Import Only**: If you use the new style, `use PhoenixInlineSvg.Helpers`, your images are already cached since they are loaded into functions at compile time.
 
 Add the following code to the file `lib/__MY_APP_NAME__/inline_svg_cache.ex`.
 

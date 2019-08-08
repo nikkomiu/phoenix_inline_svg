@@ -1,6 +1,6 @@
 defmodule PhoenixInlineSvg.HelpersTest do
   use ExUnit.Case, async: true
-  use PhoenixInlineSvg.Helpers, otp_app: :phoenix_inline_svg
+  use PhoenixInlineSvg.Helpers
 
   setup do
     start_supervised!(TestApp.Endpoint)

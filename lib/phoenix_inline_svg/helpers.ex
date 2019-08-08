@@ -6,12 +6,12 @@ defmodule PhoenixInlineSvg.Helpers do
 
       def view do
         quote do
-          use PhoenixInlineSvg.Helpers, otp_app: :my_app
+          use PhoenixInlineSvg.Helpers
         end
       end
 
   This will generate functions for each of your images, effectively caching them at compile time.
-  
+
   You can call these functions like so
 
       # Get an image with the default collection
@@ -54,8 +54,6 @@ defmodule PhoenixInlineSvg.Helpers do
   @doc """
   The using macro precompiles the SVG images into functions.
 
-  Using this macro requires passing your otp_app name as an argument.
-
   ## Examples
 
       # Default collection
@@ -64,7 +62,7 @@ defmodule PhoenixInlineSvg.Helpers do
       svg_image("image_name", attrs)
 
       # Named collection
-      
+
       svg_image("image_name", "collection_name")
       svg_image("image_name", "collection_name", attrs)
 
@@ -79,7 +77,9 @@ defmodule PhoenixInlineSvg.Helpers do
   end
 
   defmacro __using__(_) do
-    raise "You must specifiy an OTP app!"
+    PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/")
+    |> find_collection_sets
+    |> Enum.map(&create_cached_svg_image(&1))
   end
 
   @doc """
@@ -107,7 +107,7 @@ defmodule PhoenixInlineSvg.Helpers do
   Returns a safe HTML string with the contents of the SVG file after inserting the given HTML attributes.
 
   ## Examples
-  
+
       <%= svg_image(@conn, "home", class: "logo", id: "bounce-animation") %>
       <%= svg_image(YourAppWeb.Endpoint, "home", class: "logo", id: "bounce-animation") %>
 
@@ -125,10 +125,10 @@ defmodule PhoenixInlineSvg.Helpers do
   end
 
   @doc """
-  Returns a safe HTML string with the contents of the SVG file for the given collection after inserting the given HTML attributes.  
+  Returns a safe HTML string with the contents of the SVG file for the given collection after inserting the given HTML attributes.
 
   ## Examples
-  
+
       <%= svg_image(@conn, "user", "fontawesome") %>
       <%= svg_image(YourAppWeb.Endpoint, "user", "fontawesome") %>
 
