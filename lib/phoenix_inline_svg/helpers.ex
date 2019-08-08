@@ -226,7 +226,7 @@ defmodule PhoenixInlineSvg.Helpers do
   defp create_cached_svg_image({collection, name}) do
     try do
       filename =
-        hd Regex.run(~r|.*/#{collection}/(.*)\.svg|, name, capture: :all_but_first)
+        hd Regex.run(~r|.*/#{collection}/(.*)\.svg$|, name, capture: :all_but_first)
 
       svg = read_svg_from_path(name)
 
