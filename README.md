@@ -100,7 +100,7 @@ The directory in the project to load image assets from.
 config :phoenix_inline_svg, dir: "/priv/somewhere/"
 ```
 
-*Note:* Since all images are cached at compile time by default this directory does not need to be included in the `lib/` directory that is outputted from Exrm.
+**Note:** Since all images are cached at compile time by default this directory does not need to be included in the `lib/` directory that is outputted from Exrm.
 
 The default value is `/priv/static/svg/` and is a directory relative to the project's root directory.
 
