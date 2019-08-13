@@ -11,7 +11,7 @@ defmodule PhoenixInlineSvg.Helpers do
       end
 
   This will generate functions for each of your images, effectively caching them at compile time.
-  
+
   You can call these functions like so
 
       # Get an image with the default collection
@@ -62,7 +62,7 @@ defmodule PhoenixInlineSvg.Helpers do
       svg_image("image_name", attrs)
 
       # Named collection
-      
+
       svg_image("image_name", "collection_name")
       svg_image("image_name", "collection_name", attrs)
 
@@ -72,6 +72,7 @@ defmodule PhoenixInlineSvg.Helpers do
 
     svgs_path
     |> find_collection_sets
+    |> Enum.uniq
     |> Enum.map(&create_cached_svg_image(&1))
   end
 
@@ -100,7 +101,7 @@ defmodule PhoenixInlineSvg.Helpers do
   Returns a safe HTML string with the contents of the SVG file after inserting the given HTML attributes.
 
   ## Examples
-  
+
       <%= svg_image(@conn, "home", class: "logo", id: "bounce-animation") %>
       <%= svg_image(YourAppWeb.Endpoint, "home", class: "logo", id: "bounce-animation") %>
 
@@ -118,10 +119,10 @@ defmodule PhoenixInlineSvg.Helpers do
   end
 
   @doc """
-  Returns a safe HTML string with the contents of the SVG file for the given collection after inserting the given HTML attributes.  
+  Returns a safe HTML string with the contents of the SVG file for the given collection after inserting the given HTML attributes.
 
   ## Examples
-  
+
       <%= svg_image(@conn, "user", "fontawesome") %>
       <%= svg_image(YourAppWeb.Endpoint, "user", "fontawesome") %>
 
@@ -216,33 +217,37 @@ defmodule PhoenixInlineSvg.Helpers do
   end
 
   defp create_cached_svg_image({collection, name}) do
-    filename =
-      hd(Regex.run(~r|.*/#{collection}/(.*)\.svg|, name, capture: :all_but_first))
+    try do
+      filename =
+        hd Regex.run(~r|.*/#{collection}/(.*)\.svg$|, name, capture: :all_but_first)
 
-    svg = read_svg_from_path(name)
+      svg = read_svg_from_path(name)
 
-    generic_funcs = quote do
-      def svg_image(unquote(filename)) do
-        svg_image(unquote(filename), unquote(collection), [])
+      generic_funcs = quote do
+        def svg_image(unquote(filename)) do
+          svg_image(unquote(filename), unquote(collection), [])
+        end
+
+        def svg_image(unquote(filename), opts) when is_list(opts) do
+          svg_image(unquote(filename), unquote(collection), opts)
+        end
       end
 
-      def svg_image(unquote(filename), opts) when is_list(opts) do
-        svg_image(unquote(filename), unquote(collection), opts)
+      explicit_funcs = quote do
+        def svg_image(unquote(filename), unquote(collection)) do
+          svg_image(unquote(filename), unquote(collection), [])
+        end
+
+        def svg_image(unquote(filename), unquote(collection), opts) do
+          unquote(svg)
+          |> PhoenixInlineSvg.Utils.insert_attrs(opts)
+          |> PhoenixInlineSvg.Utils.safety_string
+        end
       end
+
+      [PhoenixInlineSvg.Utils.insert_generic_funcs(generic_funcs, collection), explicit_funcs]
+    rescue
+      ArgumentError -> nil
     end
-
-    explicit_funcs = quote do
-      def svg_image(unquote(filename), unquote(collection)) do
-        svg_image(unquote(filename), unquote(collection), [])
-      end
-
-      def svg_image(unquote(filename), unquote(collection), opts) do
-        unquote(svg)
-        |> PhoenixInlineSvg.Utils.insert_attrs(opts)
-        |> PhoenixInlineSvg.Utils.safety_string
-      end
-    end
-
-    [PhoenixInlineSvg.Utils.insert_generic_funcs(generic_funcs, collection), explicit_funcs]
   end
 end
