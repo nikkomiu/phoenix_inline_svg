@@ -100,7 +100,7 @@ If you are using Exrm/Distillery, make sure you use a directory that is outputte
 
 ```elixir
 # If you are using the standard way
-config :phoenix_inline_svg, dir: "/assets/somewhere/"
+config :phoenix_inline_svg, dir: "./assets/somewhere/"
 
 # If you are using the old way
 config :phoenix_inline_svg, dir: "/priv/somewhere/"
