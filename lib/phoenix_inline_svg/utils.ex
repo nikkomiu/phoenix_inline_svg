@@ -11,8 +11,16 @@ defmodule PhoenixInlineSvg.Utils do
         |> String.replace("_", "-")
 
       acc
-      |> Floki.attr("svg", attr, &String.trim("#{&1} #{value}"))
-      |> Floki.raw_html()
+      |> Floki.parse_fragment()
+      |> case do
+        {:ok, html_tree} ->
+          html_tree
+          |> Floki.attr("svg", attr, &String.trim("#{&1} #{value}"))
+          |> Floki.raw_html()
+
+        {:error, html} ->
+          raise("Unable to parse html\n#{html}")
+      end
     end)
   end
 
