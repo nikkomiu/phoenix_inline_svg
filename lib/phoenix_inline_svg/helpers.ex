@@ -70,17 +70,50 @@ defmodule PhoenixInlineSvg.Helpers do
 
   """
   defmacro __using__([otp_app: app_name] = _opts) do
-    svgs_path = Application.app_dir(app_name,
-      PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/"))
+    precompile(app_name)
+  end
+
+  defmacro __using__(_) do
+    raise "You must specifiy an OTP app!"
+  end
+
+  @doc """
+  Precompile the SVG images into functions once, as opposed to `__using__` macro.
+  
+  To use this, import Helpers into your views function:
+
+      def view do
+        quote do
+          import PhoenixInlineSvg.Helpers
+        end
+      end
+      
+  Afterwards, add a call to `precompile` function in `start` function of your `application.ex` file:
+
+        def start(_type, _args) do
+          children = [
+            ...
+          ]
+        
+          # precompile svgs to functions
+          PhoenixInlineSvg.Helpers.precompile(:persense)
+        
+          opts = [strategy: :one_for_one, name: Persense.Supervisor]
+          Supervisor.start_link(children, opts)
+        end
+
+  """
+  def precompile(app_name) do
+    svgs_path =
+      Application.app_dir(
+        app_name,
+        PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/")
+      )
 
     svgs_path
     |> find_collection_sets
     |> Enum.uniq
     |> Enum.map(&create_cached_svg_image(&1))
-  end
-
-  defmacro __using__(_) do
-    raise "You must specifiy an OTP app!"
   end
 
   @doc """
