@@ -54,7 +54,7 @@ By default this will load the SVG file from:
 /priv/static/svg/generic/home.svg
 ```
 
-NOTE: Make sure your svg's are stored in `/assets/static/svg` or your app will crash. Phoenix will automatically copy them to `priv` directory.
+NOTE: Make sure your svg's are stored in `/assets/static/svg/generic/` or your app will crash. Phoenix will automatically copy them to `priv` directory.
 
 ### Collections
 
