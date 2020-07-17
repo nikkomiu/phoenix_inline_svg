@@ -22,6 +22,8 @@ end
 
 ## Usage
 
+`my_app_web.ex`:
+
 ```elixir
 def view do
   quote do
@@ -51,6 +53,8 @@ By default this will load the SVG file from:
 ```
 /priv/static/svg/generic/home.svg
 ```
+
+NOTE: Make sure your svg's are stored in `/assets/static/svg` or your app will crash. Phoenix will automatically copy them to `priv` directory.
 
 ### Collections
 
