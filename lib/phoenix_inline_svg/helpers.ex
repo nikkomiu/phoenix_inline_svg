@@ -73,10 +73,26 @@ defmodule PhoenixInlineSvg.Helpers do
     svgs_path = Application.app_dir(app_name,
       PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/"))
 
-    svgs_path
-    |> find_collection_sets
-    |> Enum.uniq
-    |> Enum.map(&create_cached_svg_image(&1))
+    files =
+      load_files(svgs_path)
+      |> Enum.map(&Path.join(svgs_path, &1))
+      |> Stream.filter(&File.dir?(&1))
+      |> Enum.flat_map(fn dir -> load_files(dir) |> Enum.map(&Path.join(dir, &1)) end)
+
+    external_resources =
+      Enum.map(files, fn file ->
+        quote do
+          @external_resource unquote(file)
+        end
+      end)
+
+    [
+      external_resources
+      | svgs_path
+        |> find_collection_sets
+        |> Enum.uniq()
+        |> Enum.map(&create_cached_svg_image(&1))
+    ]
   end
 
   defmacro __using__(_) do
@@ -191,14 +207,9 @@ defmodule PhoenixInlineSvg.Helpers do
 
 
   defp find_collection_sets(svgs_path) do
-    case File.ls(svgs_path) do
-      {:ok, listed_files} ->
-        listed_files
-        |> Stream.filter(fn(e) -> File.dir?(Path.join(svgs_path, e)) end)
-        |> Enum.flat_map(&map_collection(&1, svgs_path))
-      _ ->
-        []
-    end
+    load_files(svgs_path)
+    |> Stream.filter(fn(e) -> File.dir?(Path.join(svgs_path, e)) end)
+    |> Enum.flat_map(&map_collection(&1, svgs_path))
   end
 
   defp map_collection(collection, svgs_path) do
@@ -255,6 +266,13 @@ defmodule PhoenixInlineSvg.Helpers do
       [PhoenixInlineSvg.Utils.insert_generic_funcs(generic_funcs, collection), explicit_funcs]
     rescue
       ArgumentError -> nil
+    end
+  end
+
+  defp load_files(path) do
+    case File.ls(path) do
+      {:ok, files} -> files
+      _ -> []
     end
   end
 end
