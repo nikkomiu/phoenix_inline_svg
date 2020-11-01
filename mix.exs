@@ -4,7 +4,7 @@ defmodule PhoenixInlineSvg.Mixfile do
   def project do
     [
       app: :phoenix_inline_svg,
-      version: "1.3.2",
+      version: "1.4.0",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
