@@ -68,9 +68,7 @@ defmodule PhoenixInlineSvg.Helpers do
 
   """
   defmacro __using__(_) do
-    svgs_path = PhoenixInlineSvg.Utils.config_or_default(:dir, "assets/static/svg/")
-
-    svgs_path
+    PhoenixInlineSvg.Utils.config_or_default(:dir, "assets/static/svg/")
     |> find_collection_sets
     |> Enum.uniq()
     |> Enum.map(&create_cached_svg_image(&1))
