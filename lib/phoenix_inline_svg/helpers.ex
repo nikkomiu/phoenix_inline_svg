@@ -70,12 +70,15 @@ defmodule PhoenixInlineSvg.Helpers do
 
   """
   defmacro __using__([otp_app: app_name] = _opts) do
-    svgs_path = Application.app_dir(app_name,
-      PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/"))
+    svgs_path =
+      Application.app_dir(
+        app_name,
+        PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/")
+      )
 
     svgs_path
     |> find_collection_sets
-    |> Enum.uniq
+    |> Enum.uniq()
     |> Enum.map(&create_cached_svg_image(&1))
   end
 
@@ -101,7 +104,11 @@ defmodule PhoenixInlineSvg.Helpers do
   """
 
   def svg_image(conn_or_endpoint, name) do
-    svg_image(conn_or_endpoint, name, PhoenixInlineSvg.Utils.config_or_default(:default_collection, "generic"))
+    svg_image(
+      conn_or_endpoint,
+      name,
+      PhoenixInlineSvg.Utils.config_or_default(:default_collection, "generic")
+    )
   end
 
   @doc """
@@ -122,7 +129,12 @@ defmodule PhoenixInlineSvg.Helpers do
 
   """
   def svg_image(conn_or_endpoint, name, attrs) when is_list(attrs) do
-    svg_image(conn_or_endpoint, name, PhoenixInlineSvg.Utils.config_or_default(:default_collection, "generic"), attrs)
+    svg_image(
+      conn_or_endpoint,
+      name,
+      PhoenixInlineSvg.Utils.config_or_default(:default_collection, "generic"),
+      attrs
+    )
   end
 
   @doc """
@@ -154,18 +166,21 @@ defmodule PhoenixInlineSvg.Helpers do
     "#{collection}/#{name}.svg"
     |> read_svg_file(conn_or_endpoint)
     |> PhoenixInlineSvg.Utils.insert_attrs(attrs)
-    |> PhoenixInlineSvg.Utils.safety_string
+    |> PhoenixInlineSvg.Utils.safety_string()
   end
 
   defp read_svg_from_path(path) do
     case File.read(path) do
       {:ok, result} ->
         String.trim(result)
+
       {:error, _} ->
-        PhoenixInlineSvg.Utils.config_or_default(:not_found,
+        PhoenixInlineSvg.Utils.config_or_default(
+          :not_found,
           "<svg viewbox='0 0 60 60'>" <>
-          "<text x='0' y='40' font-size='30' font-weight='bold'" <>
-          "font-family='monospace'>Err</text></svg>")
+            "<text x='0' y='40' font-size='30' font-weight='bold'" <>
+            "font-family='monospace'>Err</text></svg>"
+        )
     end
   end
 
@@ -175,7 +190,7 @@ defmodule PhoenixInlineSvg.Helpers do
       PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/"),
       icon_path
     ]
-    |> Path.join
+    |> Path.join()
     |> read_svg_from_path
   end
 
@@ -195,37 +210,36 @@ defmodule PhoenixInlineSvg.Helpers do
       PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/"),
       icon_path
     ]
-    |> Path.join
+    |> Path.join()
     |> read_svg_from_path
   end
-
 
   defp find_collection_sets(svgs_path) do
     case File.ls(svgs_path) do
       {:ok, listed_files} ->
         listed_files
-        |> Stream.filter(fn(e) -> File.dir?(Path.join(svgs_path, e)) end)
+        |> Stream.filter(fn e -> File.dir?(Path.join(svgs_path, e)) end)
         |> Enum.flat_map(&map_collection(&1, svgs_path))
+
       _ ->
         []
     end
   end
 
   defp map_collection(collection, svgs_path) do
-    collection_path =
-      Path.join(svgs_path, collection)
+    collection_path = Path.join(svgs_path, collection)
 
     collection_path
-    |> File.ls!
+    |> File.ls!()
     |> Stream.map(&Path.join(collection_path, &1))
     |> Stream.flat_map(&to_file_path/1)
     |> Enum.map(&{collection, &1})
   end
 
-  defp to_file_path(path)do
+  defp to_file_path(path) do
     if File.dir?(path) do
       path
-      |> File.ls!
+      |> File.ls!()
       |> Stream.map(&Path.join(path, &1))
       |> Enum.flat_map(&to_file_path/1)
     else
@@ -235,32 +249,33 @@ defmodule PhoenixInlineSvg.Helpers do
 
   defp create_cached_svg_image({collection, name}) do
     try do
-      filename =
-        hd Regex.run(~r|.*/#{collection}/(.*)\.svg$|, name, capture: :all_but_first)
+      filename = hd(Regex.run(~r|.*/#{collection}/(.*)\.svg$|, name, capture: :all_but_first))
 
       svg = read_svg_from_path(name)
 
-      generic_funcs = quote do
-        def svg_image(unquote(filename)) do
-          svg_image(unquote(filename), unquote(collection), [])
+      generic_funcs =
+        quote do
+          def svg_image(unquote(filename)) do
+            svg_image(unquote(filename), unquote(collection), [])
+          end
+
+          def svg_image(unquote(filename), opts) when is_list(opts) do
+            svg_image(unquote(filename), unquote(collection), opts)
+          end
         end
 
-        def svg_image(unquote(filename), opts) when is_list(opts) do
-          svg_image(unquote(filename), unquote(collection), opts)
-        end
-      end
+      explicit_funcs =
+        quote do
+          def svg_image(unquote(filename), unquote(collection)) do
+            svg_image(unquote(filename), unquote(collection), [])
+          end
 
-      explicit_funcs = quote do
-        def svg_image(unquote(filename), unquote(collection)) do
-          svg_image(unquote(filename), unquote(collection), [])
+          def svg_image(unquote(filename), unquote(collection), opts) do
+            unquote(svg)
+            |> PhoenixInlineSvg.Utils.insert_attrs(opts)
+            |> PhoenixInlineSvg.Utils.safety_string()
+          end
         end
-
-        def svg_image(unquote(filename), unquote(collection), opts) do
-          unquote(svg)
-          |> PhoenixInlineSvg.Utils.insert_attrs(opts)
-          |> PhoenixInlineSvg.Utils.safety_string
-        end
-      end
 
       [PhoenixInlineSvg.Utils.insert_generic_funcs(generic_funcs, collection), explicit_funcs]
     rescue
