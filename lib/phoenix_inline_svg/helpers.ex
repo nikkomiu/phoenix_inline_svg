@@ -194,16 +194,6 @@ defmodule PhoenixInlineSvg.Helpers do
     |> read_svg_from_path
   end
 
-  defp read_svg_file(icon_path, %Phoenix.LiveView.Socket{} = socket) do
-    [
-      Application.app_dir(socket.endpoint.config(:otp_app)),
-      PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/"),
-      icon_path
-    ]
-    |> Path.join
-    |> read_svg_from_path
-  end
-
   defp read_svg_file(icon_path, endpoint) do
     [
       Application.app_dir(endpoint.config(:otp_app)),
