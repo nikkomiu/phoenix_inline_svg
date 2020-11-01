@@ -22,6 +22,8 @@ end
 
 ## Usage
 
+`my_app_web.ex`:
+
 ```elixir
 def view do
   quote do
@@ -35,7 +37,7 @@ end
 ### Generic Collection
 
 ```elixir
-<%= svg_image("home") %>
+<%= PhoenixInlineSvg.Helpers.svg_image(@conn, "home") %>
 ```
 
 Where `home` is the name of the SVG file you want to load.
@@ -52,12 +54,14 @@ By default this will load the SVG file from:
 /assets/static/svg/generic/home.svg
 ```
 
+NOTE: Make sure your svg's are stored in `/assets/static/svg/generic/` or your app will crash. Phoenix will automatically copy them to `priv` directory.
+
 ### Collections
 
 There is an optional argument in the function to allow for breaking up SVG files into collections (or folders on the filesystem):
 
 ```
-<%= svg_image("user", "fontawesome") %>
+<%= PhoenixInlineSvg.Helpers.svg_image(@conn, "user", "fontawesome") %>
 ```
 
 Will result in the output:
@@ -78,7 +82,7 @@ You can also pass optional HTML attributes into the function to set
 those properties on the SVG.
 
 ```
-<%= svg_image("home", class: "logo", id: "bounce-animation") %>
+<%= PhoenixInlineSvg.Helpers.svg_image(@conn,"home", class: "logo", id: "bounce-animation") %>
 ```
 
 Will result in the output:

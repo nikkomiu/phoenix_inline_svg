@@ -25,7 +25,8 @@ defmodule PhoenixInlineSvg.HelpersTest do
     end
 
     test "converts multi word attrs from snake case to kebab case" do
-      actual = PhoenixInlineSvg.Helpers.svg_image(TestApp.Endpoint, "test_svg", aria_labelledby: "me")
+      actual =
+        PhoenixInlineSvg.Helpers.svg_image(TestApp.Endpoint, "test_svg", aria_labelledby: "me")
 
       assert actual == {:safe, ~s|<svg aria-labelledby="me"></svg>|}
     end

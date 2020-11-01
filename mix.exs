@@ -4,7 +4,7 @@ defmodule PhoenixInlineSvg.Mixfile do
   def project do
     [
       app: :phoenix_inline_svg,
-      version: "1.3.1",
+      version: "1.3.2",
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
@@ -32,7 +32,7 @@ defmodule PhoenixInlineSvg.Mixfile do
   defp deps do
     [
       {:phoenix, "~> 1.4"},
-      {:floki, "~> 0.21.0"},
+      {:floki, "~> 0.24"},
       {:inch_ex, "~> 1.0", only: [:dev, :test]},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:excoveralls, "~> 0.5", only: [:dev, :test]},
