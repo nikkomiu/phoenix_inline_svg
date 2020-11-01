@@ -6,7 +6,7 @@ defmodule PhoenixInlineSvg.Helpers do
 
       def view do
         quote do
-          use PhoenixInlineSvg.Helpers, otp_app: :my_app
+          use PhoenixInlineSvg.Helpers
         end
       end
 
@@ -42,7 +42,7 @@ defmodule PhoenixInlineSvg.Helpers do
 
   ## Configuration
 
-  By default SVG files are loaded from: priv/static/svg/
+  By default SVG files are loaded from: assets/static/svg/
 
   The directory where SVG files are loaded from can be configured by setting the configuration variable:
 
@@ -53,8 +53,6 @@ defmodule PhoenixInlineSvg.Helpers do
 
   @doc """
   The using macro precompiles the SVG images into functions.
-
-  Using this macro requires passing your otp_app name as an argument.
 
   ## Examples
 
@@ -69,21 +67,11 @@ defmodule PhoenixInlineSvg.Helpers do
       svg_image("image_name", "collection_name", attrs)
 
   """
-  defmacro __using__([otp_app: app_name] = _opts) do
-    svgs_path =
-      Application.app_dir(
-        app_name,
-        PhoenixInlineSvg.Utils.config_or_default(:dir, "priv/static/svg/")
-      )
-
-    svgs_path
+  defmacro __using__(_) do
+    PhoenixInlineSvg.Utils.config_or_default(:dir, "assets/static/svg/")
     |> find_collection_sets
     |> Enum.uniq()
     |> Enum.map(&create_cached_svg_image(&1))
-  end
-
-  defmacro __using__(_) do
-    raise "You must specifiy an OTP app!"
   end
 
   @doc """
