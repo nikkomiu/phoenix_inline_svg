@@ -90,7 +90,6 @@ defmodule PhoenixInlineSvg.Helpers do
   The main function is `svg_image/4`.
 
   """
-
   def svg_image(conn_or_endpoint, name) do
     svg_image(
       conn_or_endpoint,
@@ -193,14 +192,18 @@ defmodule PhoenixInlineSvg.Helpers do
   end
 
   defp find_collection_sets(svgs_path) do
-    case File.ls(svgs_path) do
-      {:ok, listed_files} ->
-        listed_files
-        |> Stream.filter(fn e -> File.dir?(Path.join(svgs_path, e)) end)
-        |> Enum.flat_map(&map_collection(&1, svgs_path))
+    if File.dir?(svgs_path) do
+      case File.ls(svgs_path) do
+        {:ok, listed_files} ->
+          listed_files
+          |> Stream.filter(fn e -> File.dir?(Path.join(svgs_path, e)) end)
+          |> Enum.flat_map(&map_collection(&1, svgs_path))
 
-      _ ->
-        []
+        _ ->
+          []
+      end
+    else
+      []
     end
   end
 
