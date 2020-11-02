@@ -1,10 +1,13 @@
 defmodule PhoenixInlineSvg.Mixfile do
   use Mix.Project
 
+  @source_url "https://github.com/nikkomiu/phoenix_inline_svg"
+  @version "1.4.0"
+
   def project do
     [
       app: :phoenix_inline_svg,
-      version: "1.4.0",
+      version: @version,
       elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
@@ -12,7 +15,7 @@ defmodule PhoenixInlineSvg.Mixfile do
       description: description(),
       preferred_cli_env: cli_env(),
       test_coverage: [tool: ExCoveralls],
-      docs: [extras: ["README.md"]]
+      docs: docs()
     ]
   end
 
@@ -53,7 +56,16 @@ defmodule PhoenixInlineSvg.Mixfile do
       maintainers: ["Nikko Miu <nikkoamiu@gmail.com>"],
       licenses: ["MIT"],
       files: ~w(lib mix.exs README.md LICENSE),
-      links: %{github: "https://github.com/nikkomiu/phoenix_inline_svg"}
+      links: %{GitHub: @source_url}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      source_ref: "v#{@version}",
+      source_url: @source_url,
+      extras: ["README.md"]
     ]
   end
 end
