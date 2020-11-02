@@ -124,7 +124,7 @@ The default value is `generic`
 
 ### Not Found
 
-What should be dispayed in the `<i>` element when there is no SVG file found.
+What should be displayed in the `<i>` element when there is no SVG file found.
 
 ```elixir
 config :phoenix_inline_svg, not_found: "<p>Oh No!</p>"
