@@ -124,7 +124,7 @@ Specify content to displayed in the `<i>` element when there is no SVG file foun
 config :phoenix_inline_svg, not_found: "<p>Oh No!</p>"
 ```
 
-## Old Way
+## Old Way (NOT RECOMMENDED)
 
 To use this package in the old way, add the following line to the view function in your `my_app_web.ex` file.
 
