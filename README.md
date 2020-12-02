@@ -21,87 +21,71 @@ def deps do
 end
 ```
 
-## Usage
+## Import Helpers
 
 `my_app_web.ex`:
 
 ```elixir
 def view do
   quote do
-    ...
+    # ...
     use PhoenixInlineSvg.Helpers
-    ...
+    # ...
   end
 end
 ```
 
-### Generic Collection
+## Usage
 
-```elixir
-<%= PhoenixInlineSvg.Helpers.svg_image(@conn, "home") %>
+### load SVG file from default collection
+
+```eex
+<%= svg_image("home") %>
 ```
 
-Where `home` is the name of the SVG file you want to load.
-
-This will output the HTML:
-
+It will load the SVG file from `/assets/static/svg/generic/home.svg`, and inject the content of SVG file to HTML:
 ```html
 <svg>...</svg>
 ```
 
-By default this will load the SVG file from:
+### load SVG file from other collections
 
-```
-/assets/static/svg/generic/home.svg
-```
+You can break up SVG files into collections, and use the second argument of `svg_image/2` to specify the name of collection:
 
-NOTE: Make sure your svg's are stored in `/assets/static/svg/generic/` or your app will crash. Phoenix will automatically copy them to `priv` directory.
-
-### Collections
-
-There is an optional argument in the function to allow for breaking up SVG files into collections (or folders on the filesystem):
-
-```
-<%= PhoenixInlineSvg.Helpers.svg_image(@conn, "user", "fontawesome") %>
+```eex
+<%= svg_image("user", "fontawesome") %>
 ```
 
-Will result in the output:
+It will load the SVG file from `/assets/static/svg/fontawesome/user.svg`, and inject the content of SVG file to HTML:
 
 ```html
 <svg>...</svg>
-```
-
-This will load the SVG file from:
-
-```
-/assets/static/svg/fontawesome/user.svg
 ```
 
 ### HTML attributes
 
-You can also pass optional HTML attributes into the function to set
-those properties on the SVG.
+You can also pass optional HTML attributes into the function to set those properties on the SVG:
 
-```
-<%= PhoenixInlineSvg.Helpers.svg_image(@conn,"home", class: "logo", id: "bounce-animation") %>
+```eex
+<%= svg_image("home", class: "logo", id: "bounce-animation") %>
 ```
 
-Will result in the output:
+It will output:
 
 ```html
 <svg class="logo" id="bounce-animation">...</svg>
 ```
 
-
 ## Configuration Options
 
-There are several _optional_ configuration settings for adjusting this package to your needs:
+There are several optional configuration settings for adjusting this package to your needs:
 
-### Directory
+### `:dir`
 
-The directory in the project from which to load image assets.
+Specify the directory from which to load SVG files.
 
-If you are using Exrm/Distillery, make sure you use a directory that is outputted to the projects `lib` directory after the release has been created.
+> + the default value for standard way is `/assets/static/svg/`
+> + the default value for old way is `/priv/static/svg/`
 
 ```elixir
 # If you are using the standard way
@@ -111,38 +95,38 @@ config :phoenix_inline_svg, dir: "./assets/somewhere/"
 config :phoenix_inline_svg, dir: "/priv/somewhere/"
 ```
 
-The default value is `/assets/static/svg/` for the standard method and `/priv/static/svg` for the old method.
+> [NOTE] If you are using Exrm/Distillery, make sure you use a directory that is outputted to the projects `lib` directory after the release has been created.
 
-### Default Collection
+### `:default_collection`
 
-The name of the collection to use by default. This is usually overridden to be the primary collection of images.
+Specify the default collection to use.
+
+> the deafult value is `generic`
 
 ```elixir
 config :phoenix_inline_svg, default_collection: "fontawesome"
 ```
 
-The default value is `generic`
+### `:not_found`
 
-### Not Found
+Specify content to displayed in the `<i>` element when there is no SVG file found.
 
-What should be displayed in the `<i>` element when there is no SVG file found.
+> the default value is:
+> ```
+> <svg viewbox='0 0 60 60'>
+>   <text x='0' y='40' font-size='30' font-weight='bold'
+>     font-family='monospace'>Err</text>
+> </svg>
+> ```
+
 
 ```elixir
 config :phoenix_inline_svg, not_found: "<p>Oh No!</p>"
 ```
 
-The default value is:
+## Old Way
 
-```
-<svg viewbox='0 0 60 60'>
-  <text x='0' y='40' font-size='30' font-weight='bold'
-    font-family='monospace'>Err</text>
-</svg>
-```
-
-## Old Style
-
-To use this package in the old style, add the following line to the view function in your `my_app_web.ex` file.
+To use this package in the old way, add the following line to the view function in your `my_app_web.ex` file.
 
 ```elixir
 def view do
