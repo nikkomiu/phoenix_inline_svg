@@ -7,8 +7,9 @@
 [![Hex.pm](https://img.shields.io/hexpm/v/phoenix_inline_svg.svg)](https://hex.pm/packages/phoenix_inline_svg)
 [![Hex.pm](https://img.shields.io/hexpm/l/phoenix_inline_svg.svg)](https://hex.pm/packages/phoenix_inline_svg)
 
-Adds support for inline SVG files in Phoenix Framework. This package
-allows you to quickly and easily add SVG files into your HTML templates in Phoenix Framework.
+An inline SVG file renderer for Phoenix Framework.
+
+This package is designed to make loading SVG based icons into HTML structure much easeier in PhoenixFrameowrk.
 
 ## Installation
 
